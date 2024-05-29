@@ -10,7 +10,7 @@ import mysql.connector
 dbconfig = {
     "host": "localhost",
     "user": "root",
-    "password": "abc31415",
+    "password": "xxxxx",
     # "password":"Abc123!@" 
     "database": "taipeiattractions"
 }
