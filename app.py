@@ -10,7 +10,8 @@ import mysql.connector
 dbconfig = {
     "host": "localhost",
     "user": "root",
-    "password": "xxxxx", 
+    "password": "abc31415",
+    # "password":"Abc123!@" 
     "database": "taipeiattractions"
 }
 
@@ -144,7 +145,13 @@ async def attraction(request: Request, page: int = Depends(get_page),
                             myimgList.append(img[2])
                         mydic["images"] = myimgList
                     result.append(mydic)
-                return {"nextPage": page + 1, "data": result}
+                    nextPage=0
+                    if len(result)<limitpage:
+                        nextPage=None
+                    else:
+                        nextPage=page + 1
+                        
+                return {"nextPage": nextPage, "data": result}
             else:
                 return {"nextPage": None, "data": result}
     except Exception as e:
