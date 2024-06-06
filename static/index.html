@@ -1,11 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Index</title>
-</head>
-<body>
-  
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="navigation">
+      <div class="HeadContainer">
+        <div class="LeftTitle">
+          <div class="header-2-bold-30">台北一日遊</div>
+        </div>
+        <div class="Frame2">
+          <div class="Frame1">
+            <div class="Itinerary">預定行程</div>
+            <div class="Sign_In_Up">登錄/註冊</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="navigation-placeholder"></div>
+
+    <div class="HeroSection">
+      <div class="sloganContainer">
+        <div class="mySlogan">
+          <div class="Slogan">
+            <div class="header-1-bold-28">輕鬆享受台北一日悠閒</div>
+            <div class="body-bold-16">探索每個角落，體驗城市的深度旅遊行程</div>
+          </div>
+          <div class="SearchContainer">
+            <input
+              type="text"
+              placeholder="輸入景點名稱查詢"
+              class="AttractionInput"
+            />
+
+            <button class="search-button">
+              <img src="/static/icon/search.png" alt="lost" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main" id="constrained-container">
+      <div class="ListBar">
+        <div class="LeftContainer">
+          <div class="listBarLeft" id="listBarLeft">
+            <img src="/static/icon/LeftArror_Default.png" alt="" />
+          </div>
+        </div>
+
+        <div class="ListContainer">
+          <ul class="scroll-list" id="scrollList"></ul>
+        </div>
+
+        <div class="RightContainer">
+          <div class="listBarRight" id="listBarRight">
+            <img src="/static/icon/RightArror_Default.png" alt="" />
+          </div>
+        </div>
+      </div>
+
+      <div class="attractions">
+        <div class="attractionsGroup">
+          <div class="BBox1">
+            <div class="AttractiobPic">
+              <div class="attractionName">attractionName</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+          <div class="BBox2">
+            <div class="AttractiobPic">
+              <div class="attractionName">attractionName</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+          <div class="BBox3">
+            <div class="AttractiobPic">
+              <div class="attractionName">attractionName</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+          <div class="BBox4">
+            <div class="AttractiobPic">
+              <div class="attractionName">attractionName</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+          <div class="BBox5">
+            <div class="AttractiobPic">
+              <div class="attractionName">attractionName</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+          <div class="BBox6">
+            <div class="AttractiobPic">
+              <div class="attractionName">attractionName</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+          <div class="BBox7">
+            <div class="AttractiobPic">
+              <div class="attractionName">attractionName</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+          <div class="BBox8">
+            <div class="AttractiobPic">
+              <div class="attractionName">attractionName</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+          <div class="BBox9">
+            <div class="AttractiobPic">
+              <div class="attractionName">attractionName</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+          <div class="BBox10">
+            <div class="AttractiobPic">
+              <div class="attractionName">attractionName</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+          <div class="BBox11">
+            <div class="AttractiobPic">
+              <div class="attractionName">attractionName</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+          <div class="BBox12">
+            <div class="AttractiobPic">
+              <div class="attractionName">意在台北</div>
+            </div>
+            <div class="MRT_Categ">
+              <div class="LeftMrt">西門</div>
+              <div class="RighttCat">公共藝術</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="adjfooter"></div>
+    <div class="footer">
+      <div class="footerText">COPYRIGHT © 2021 台北一日遊</div>
+    </div>
+
+    <!-- <script src="/static/script.js"></script> -->
+    <script>
+      let nextpage = 0;
+      let startBBoxId = 0;
+      let keywordsearch = "";
+      let isFetching = false; // 用於確認是否正在進行fetch
+
+      // 當網頁開啟時初始化設置
+      window.addEventListener("DOMContentLoaded", function () {
+        const attractionsGroup = document.querySelector(".attractionsGroup");
+        attractionsGroup.innerHTML = ""; //頁面載入時清空 attractionsGroup 內容
+        startBBoxId = 0;
+
+        // console.log("網頁初始化startBBoxId:" + startBBoxId);
+
+        fetchMrts(); //將mrt捷運站放入水平滑動列表
+
+        fetchFirstPageAttractions(); //執行景點grid箱子加入並加入景點資訊
+      });
+
+      //將mrt捷運站放入水平滑動列表
+      async function fetchMrts() {
+        try {
+          const response = await fetch(`/api/mrts`);
+          if (!response.ok) {
+            throw new Error(
+              "Network response was not ok " + response.statusText
+            );
+          }
+
+          const data = await response.json(); //將respose轉成json
+
+          // 創建一個 ul 元素並賦予它一個 id 和 class
+          const list = document.createElement("ul");
+          list.id = "scrollList";
+          list.className = "scroll-list";
+
+          // 遍歷 data 陣列，為每個站點創建一個 li 元素並添加到 ul 中
+          data["data"].forEach((station) => {
+            if (station) {
+              // 確保站點名稱不是 null
+              const listItem = document.createElement("li");
+              listItem.textContent = station;
+              list.appendChild(listItem);
+
+              // 添加事件監聽器，若按下就執行將捷運站放入搜尋列並且搜尋的動作
+              listItem.addEventListener("click", function () {
+                const input = document.querySelector(".AttractionInput");
+                input.value = this.textContent;
+                document.querySelector(".search-button").click();
+              });
+            }
+          });
+
+          // 選擇 class 為 ListContainer 的 div 並將 ul 元素添加到其中
+          const ListContainer = document.querySelector(".ListContainer");
+          ListContainer.appendChild(list);
+        } catch (error) {
+          console.error("problem with fetch operation:", error);
+        }
+      }
+
+      // 滑鼠滑動動畫設置
+      document.addEventListener("DOMContentLoaded", function () {
+        const scrollWrapper = document.querySelector(".ListContainer");
+        const scrollLeft = document.getElementById("listBarLeft");
+        const scrollRight = document.getElementById("listBarRight");
+
+        let isScrolling = false;
+        let scrollSpeed = 0;
+        let scrollDirection = 0; // -1 for left, 1 for right
+        let lastTime = 0;
+
+        function step(timestamp) {
+          if (!lastTime) lastTime = timestamp;
+          const deltaTime = timestamp - lastTime;
+          lastTime = timestamp;
+          if (isScrolling) {
+            scrollWrapper.scrollBy({
+              left: scrollSpeed * deltaTime,
+              behavior: "auto",
+            });
+          } else {
+            scrollSpeed *= 0.1; // Decay speed to simulate inertia
+            if (Math.abs(scrollSpeed) < 0.1) {
+              scrollSpeed = 0;
+            } else {
+              scrollWrapper.scrollBy({
+                left: scrollSpeed * deltaTime * scrollDirection,
+                behavior: "auto",
+              });
+              requestAnimationFrame(step);
+            }
+          }
+
+          if (isScrolling || scrollSpeed !== 0) {
+            requestAnimationFrame(step);
+          }
+        }
+
+        function startScrolling(direction) {
+          isScrolling = true;
+          scrollDirection = direction;
+          scrollSpeed = direction * 0.5; // Adjust initial speed for more inertia
+          requestAnimationFrame(step);
+        }
+
+        function stopScrolling() {
+          isScrolling = false;
+        }
+
+        scrollLeft.addEventListener("mousedown", function () {
+          startScrolling(-1);
+        });
+
+        scrollRight.addEventListener("mousedown", function () {
+          startScrolling(1);
+        });
+
+        document.addEventListener("mouseup", function () {
+          stopScrolling();
+        });
+
+        document.addEventListener("mouseleave", function () {
+          stopScrolling();
+        });
+      });
+
+      // 搜索功能函數按鈕設置
+      async function mysearch() {
+        document
+          .querySelector(".search-button")
+          .addEventListener("click", function () {
+            keywordsearch = document.querySelector(".AttractionInput").value;
+            const attractionsGroup =
+              document.querySelector(".attractionsGroup");
+            attractionsGroup.innerHTML = ""; // 清空内容
+            startBBoxId = 0;
+            nextpage = 0;
+
+            // console.log("按下mysearch按鈕下的nextpage:" + nextpage);
+            fetchFirstPageAttractions(nextpage, keywordsearch);
+
+            // console.log("按下mysearch按鈕下的input:" + keywordsearch);
+          });
+      }
+
+      //增加grid內部的箱子
+      async function LoadPic(datalength = 12) {
+        var attractionsGroup = document.querySelector(".attractionsGroup");
+        var boxCount = datalength;
+        for (var i = 1; i <= boxCount; i++) {
+          var box = document.createElement("div");
+          var boxId = startBBoxId + i;
+          box.className = "BBox" + i;
+          box.setAttribute("id", "box" + boxId);
+
+          // 生成景點圖片容器
+          var attractionPic = document.createElement("div");
+          attractionPic.className = "AttractiobPic";
+
+          // 生成景點名稱
+          var attractionName = document.createElement("div");
+          attractionName.className = "attractionName";
+          attractionName.textContent = "attractionName";
+
+          // 將景點名稱添加到景點圖片容器中
+          attractionPic.appendChild(attractionName);
+
+          // 生成MRT_Categ容器
+          var mrtCateg = document.createElement("div");
+          mrtCateg.className = "MRT_Categ";
+
+          // 生成LeftMrt
+          var leftMrt = document.createElement("div");
+          leftMrt.className = "LeftMrt";
+          leftMrt.textContent = "西門";
+
+          // 生成RighttCat
+          var rightCat = document.createElement("div");
+          rightCat.className = "RighttCat";
+          rightCat.textContent = "公共藝術";
+
+          // 将RighttCat和RighttCat添加MRT_Categ容器中
+          mrtCateg.appendChild(leftMrt);
+          mrtCateg.appendChild(rightCat);
+
+          // 将attractionPic容器和mrtCateg容器添加到箱子中
+          box.appendChild(attractionPic);
+          box.appendChild(mrtCateg);
+
+          // 將生成的箱子添加到父容器中
+          attractionsGroup.appendChild(box);
+        }
+        startBBoxId += boxCount;
+      }
+
+      // 將fastapi回傳的景點資訊放到grid箱子內
+      async function fetchFirstPageAttractions(page = 0, keyword = "") {
+        if (isFetching) return; // 如果正在進行請求，則不繼續
+        isFetching = true; // 設置為正在進行請求
+        let response; // 定義 response 變量
+        try {
+          if (keyword == "") {
+            response = await fetch(`/api/attractions/?page=${page}`);
+          } else {
+            response = await fetch(
+              `/api/attractions/?page=${page}&keyword=${keyword}`
+            );
+          }
+          // const response = await fetch(
+          //   `/api/attractions/?page=${page}&keyword=${keyword}`
+          // );
+          if (!response.ok) {
+            throw new Error(
+              "Network response was not ok " + response.statusText
+            );
+          }
+
+          const data = await response.json();
+
+          LoadPic(data["data"].length); //根據api回傳的資料長度增加相應的grid內部的箱子數量
+
+          nextpage = data["nextPage"];
+
+          // console.log(
+          //   "fetchFirstPageAttractions的datalength:" + data["data"].length
+          // );
+          // console.log("nextpage經過fetchFirstPageAttractions後:" + nextpage);
+
+          // 將api回傳的景點資訊放到grid箱子內
+          for (i = 0; i < data["data"].length; i++) {
+            img1 = data["data"][i]["images"][0];
+            attractionNameContent = data["data"][i]["name"];
+            attractionMRTContent = data["data"][i]["mrt"];
+            attractionCATContent = data["data"][i]["category"];
+
+            // let boxCount = 12;
+            let boxCount = data["data"].length;
+            let boxId = startBBoxId - boxCount + i + 1;
+            let boxElement = document.getElementById("box" + boxId);
+            if (!boxElement) {
+              console.error("Looking for element with id:", "box" + boxId);
+              break;
+            }
+            let BBoxSelectorPic = boxElement.querySelector(".AttractiobPic");
+            let BBoxattractionName = boxElement.querySelector(
+              ".AttractiobPic .attractionName"
+            );
+            let BBoxattractionMRT = boxElement.querySelector(
+              ".MRT_Categ .LeftMrt"
+            );
+            let BBoxattractionCAT = boxElement.querySelector(
+              ".MRT_Categ .RighttCat"
+            );
+
+            BBoxSelectorPic.style.backgroundImage = `url(${img1})`;
+            BBoxattractionName.textContent = attractionNameContent;
+            BBoxattractionMRT.textContent = attractionMRTContent;
+            BBoxattractionCAT.textContent = attractionCATContent;
+          }
+        } catch (error) {
+          console.error("problem with fetch operation:", error);
+        } finally {
+          isFetching = false; // 請求結束，設置為未在進行請求
+        }
+      }
+
+      // 滑動到頁面底部並loading景點圖片
+      window.addEventListener("scroll", function () {
+        // 獲取 footer 元素
+        const footer = document.querySelector(".footer");
+
+        // 獲取 footer 元素相對於視口的位置信息
+        const footerPosition = footer.getBoundingClientRect();
+        // console.log(footerPosition.top);
+        // 如果 footer 元素的頂部位置小於等於視口的高度，表示用戶滾動到了頁面底部
+        if (footerPosition.top <= window.innerHeight) {
+          console.log("Reached the bottom!" && !isFetching);
+          if (nextpage != null) {
+            // LoadPic();
+            fetchFirstPageAttractions(nextpage, keywordsearch);
+          }
+          console.log("觸發底部偵測程式後的nextpage:" + nextpage);
+        }
+      });
+
+      //執行搜索
+      mysearch();
+    </script>
+  </body>
 </html>
