@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 dbconfig = {
     "host": "localhost",
     "user": "root",
-    "password": "abc31415",
+    "password": "xxxxxxxxxx",
     
     "database": "taipeiattractions"
 }
