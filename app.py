@@ -6,12 +6,14 @@ from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 import mysql.connector
 
+from fastapi.middleware.cors import CORSMiddleware
+
 # 創建mysql連接池
 dbconfig = {
     "host": "localhost",
     "user": "root",
-    "password": "xxxxx",
-
+    "password": "abc31415",
+    
     "database": "taipeiattractions"
 }
 
@@ -26,6 +28,24 @@ except mysql.connector.Error as e:
     print(f"Error creating connection pool: {e}")
 
 app = FastAPI()
+
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500"],  # 允許的來源
+    allow_credentials=True,
+    allow_methods=["*"],  # 允許的方法
+    allow_headers=["*"],  # 允許的標頭
+)
+
+
+
+
+
+
+from fastapi.staticfiles import StaticFiles
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
@@ -73,11 +93,12 @@ async def get_attraction(request: Request, attractionId: int = Path(..., descrip
             rows = cursor.fetchall()
             if not rows:
                 # raise HTTPException(status_code=400, detail={"error": True, "message": "景點編號不正確"})
-                return JSONResponse(status_code=500,content={"error": True,"message": "請按照情境提供對應的錯誤訊息"}
-        )
+                return JSONResponse(status_code=500,content={"error": True,"message": "請按照情境提供對應的錯誤訊息"})
             columnnames = [col[0] for col in cursor.description]
 
-            cursor.execute("SELECT attractions.id, attractions.name, images.image_url FROM attractions JOIN images ON attractions.id = images.attraction_id WHERE attractions.id = %s;", (attractionId,))
+            cursor.execute("SELECT attractions.id, attractions.name, images.image_url FROM attractions \
+            JOIN images ON attractions.id = images.attraction_id WHERE attractions.id = %s;", \
+            (attractionId,))
             imgurls = cursor.fetchall()
 
             myimgList = []
@@ -127,10 +148,17 @@ async def attraction(request: Request, page: int = Depends(get_page),
         offsetpage = page * limitpage
         with con.cursor() as cursor:
             if keyword:
-                cursor.execute("SELECT * FROM attractions WHERE attractions.mrt LIKE %s OR attractions.name LIKE %s LIMIT %s OFFSET %s;", ('%' + keyword + '%', '%' + keyword + '%', limitpage, offsetpage))
+                cursor.execute("SELECT COUNT(*) FROM attractions WHERE attractions.mrt LIKE %s \
+                OR attractions.name LIKE %s;", ('%' + keyword + '%', '%' + keyword + '%'))
+                TotalPageNum=cursor.fetchone()[0]
+                cursor.execute("SELECT * FROM attractions WHERE attractions.mrt LIKE %s \
+                OR attractions.name LIKE %s LIMIT %s OFFSET %s;", \
+                ('%' + keyword + '%', '%' + keyword + '%', limitpage, offsetpage))
             else:
+                cursor.execute("SELECT COUNT(*) FROM attractions")
+                TotalPageNum=cursor.fetchone()[0]
                 cursor.execute("SELECT * FROM attractions LIMIT %s OFFSET %s;", (limitpage, offsetpage))
-
+            # print(TotalPageNum)
             rowsData = cursor.fetchall()
             columnnames = [col[0] for col in cursor.description]
             result = []
@@ -145,13 +173,19 @@ async def attraction(request: Request, page: int = Depends(get_page),
                             myimgList.append(img[2])
                         mydic["images"] = myimgList
                     result.append(mydic)
-                    nextPage=0
+
+                if TotalPageNum%limitpage==0:
+                    if (TotalPageNum/limitpage)==(page+1):
+                        nextPage=None
+                    else:
+                        nextPage=page + 1
+                    return {"nextPage": nextPage, "data": result}
+                else:
                     if len(result)<limitpage:
                         nextPage=None
                     else:
                         nextPage=page + 1
-                        
-                return {"nextPage": nextPage, "data": result}
+                    return {"nextPage": nextPage, "data": result}     
             else:
                 return {"nextPage": None, "data": result}
     except Exception as e:

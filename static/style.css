@@ -1,0 +1,515 @@
+/* 重置樣式 */
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* 重置樣式 */
+
+/* html,
+body {
+  height: 100%;
+} */
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+}
+
+.navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0px 10px 0px;
+  box-sizing: border-box;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 1000;
+}
+
+.navigation-placeholder {
+  height: 54px;
+}
+
+.HeroSection {
+  /* padding-top: 54px; */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 320px;
+  background-image: url("welcome_image.png");
+  background-size: cover;
+  background-position: top;
+}
+
+.HeadContainer {
+  display: flex;
+  /* width: 1200px; */
+  max-width: 1200px;
+  width: 100%;
+  /* align-items: center; */
+}
+
+.LeftTitle {
+  flex: none;
+  width: 50%;
+}
+
+.header-2-bold-30 {
+  /* background-color: blue; */
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 34px;
+  text-align: left;
+  color: rgba(68, 136, 153, 1);
+}
+
+.Frame2 {
+  /* background-color: red; */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 50%;
+}
+
+.Frame1 {
+  display: flex;
+  align-items: center;
+
+  justify-content: space-between;
+  gap: 0px;
+  opacity: 1;
+
+  color: rgba(102, 102, 102, 1); /* 文字颜色 */
+}
+.Itinerary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 84px; /* 固定宽度 */
+  height: 14px; /* 固定高度 */
+
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 13.3px;
+}
+.Sign_In_Up {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 91px; /* 固定宽度 */
+  height: 14px; /* 固定高度 */
+
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 13.3px;
+}
+
+.sloganContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* width: 1200px; */
+  max-width: 1200px;
+  width: 100%;
+  height: 169px;
+  padding: 10px;
+  box-sizing: border-box;
+  /* gap: 10px; */
+  /* background-color: red; */
+}
+
+.mySlogan {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* background-color: greenyellow; */
+}
+
+.Slogan {
+  width: 100%;
+  /* height: 78px; */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  /* background-color: rgb(79, 10, 190); */
+}
+
+.header-1-bold-28 {
+  display: flex;
+  align-items: center;
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 28px;
+  height: 41px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: left;
+  color: rgba(248, 248, 248, 1);
+  /* background-color: red; */
+  /* text-shadow: 0px 0px 30px #aabbcc; */
+}
+
+.body-bold-16 {
+  display: flex;
+  align-items: center;
+  font-family: "Noto Sans TC", sans-serif;
+  font-style: normal;
+  font-size: 16px;
+  height: 22px;
+  font-weight: 700;
+  line-height: 13.3px;
+  text-align: left;
+  /* background-color: black; */
+  color: #f8f8f8;
+}
+.SearchContainer {
+  display: flex;
+  align-items: center;
+
+  /* background-color: gold; */
+}
+.AttractionInput {
+  height: 46px;
+  max-width: 400px;
+  width: 100%;
+  /* width: 400px; */
+  /* text-align: center; */
+  box-sizing: border-box; /* 確保 padding 不影響總寬度 */
+  padding: 10px; /* 調整內邊距，使文字垂直居中 */
+  border-radius: 5px 0px 0px 5px;
+}
+.search-button {
+  cursor: pointer;
+}
+
+@media (max-width: 360px) {
+  .AttractionInput {
+    max-width: 225px;
+  }
+}
+
+.search-button {
+  height: 46px;
+  width: 60px;
+  background-color: rgba(68, 136, 153, 1);
+  border-radius: 0px 5px 5px 0px;
+}
+
+/* #constrained-container {
+  overflow-y: scroll;
+} */
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0px 40px 0px;
+  box-sizing: border-box;
+}
+
+.ListBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  max-width: 1200px;
+  width: 100%;
+  height: 70px;
+  /* background-color: red; */
+  padding: 0px 0px 20px 0px;
+  box-sizing: border-box;
+}
+
+/* .scroll-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+} */
+
+.LeftContainer {
+  width: 47px;
+  height: 50px;
+  padding: 9px 0px 9px 15px;
+  box-sizing: border-box;
+}
+
+.listBarLeft img:hover {
+  content: url("/static/icon/LeftArror_Hovered.png");
+}
+
+.ListContainer {
+  /* width: 1106px; */
+  width: 100%;
+  /* background-color: greenyellow; */
+  display: flex;
+  align-items: center;
+  /* 新加入 */
+  overflow-x: hidden;
+  flex: 1;
+}
+
+/* .scroll-wrapper {
+  overflow-x: hidden;
+  flex: 1;
+} */
+
+.scroll-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.scroll-list li {
+  padding: 10px 20px;
+  flex: none;
+  /* border: 1px solid #ccc; */
+  margin-right: 10px;
+  white-space: nowrap;
+
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 13.3px;
+  text-align: center;
+  color: rgba(102, 102, 102, 0.6);
+}
+
+.scroll-list li:hover {
+  cursor: pointer;
+  color: rgba(0, 0, 1, 1);
+}
+
+.RightContainer {
+  width: 47px;
+  height: 50px;
+  padding: 9px 15px 9px 0px;
+  box-sizing: border-box;
+}
+
+.listBarRight img:hover {
+  content: url("/static/icon/RightArror_Hovered.png");
+}
+
+.attractions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  max-width: 1200px;
+  width: 100%;
+
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.attractionsGroup {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 3fr;
+
+  gap: 30px;
+}
+
+.BBox1,
+.BBox2,
+.BBox3,
+.BBox4,
+.BBox5,
+.BBox6,
+.BBox7,
+.BBox8,
+.BBox9,
+.BBox10,
+.BBox11,
+.BBox12 {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  border-radius: 5px;
+
+  border: 1px solid rgba(232, 232, 232, 1);
+
+  box-sizing: border-box;
+
+  min-height: 0;
+}
+
+.AttractiobPic {
+  width: 100%;
+  height: 197px;
+  background-image: url("/static/welcome_image.png");
+  background-size: cover;
+  background-position: center;
+  border-radius: 5px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.attractionName {
+  width: 100%;
+  height: 40px;
+  background-color: rgba(0, 0, 1, 0.6);
+  color: white;
+
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 13.3px;
+  text-align: left;
+
+  overflow-y: scroll;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 10px;
+  box-sizing: border-box;
+
+  display: flex; /* 使用 flex 布局 */
+  align-items: center; /* 将内容垂直居中 */
+}
+
+.MRT_Categ {
+  width: 100%;
+  height: 45px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+  gap: 4px;
+}
+.LeftMrt {
+  display: flex;
+
+  justify-content: flex-start;
+  align-items: center;
+
+  width: 50%;
+  height: 25px;
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 13.3px;
+  color: rgba(117, 117, 117, 1);
+}
+.RighttCat {
+  display: flex;
+
+  justify-content: flex-end;
+  align-items: center;
+
+  width: 50%;
+  height: 25px;
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 13.3px;
+  color: rgba(117, 117, 117, 1);
+}
+
+.footer {
+  width: 100%;
+  height: 104px;
+  background-color: rgba(117, 117, 117, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.footerText {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 13.3px;
+  color: white;
+}
+
+.mycontent {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@media (max-width: 1200px) {
+  .attractionsGroup {
+    max-width: 1170px;
+    /* width: 100%; */
+
+    /* height: 100%; */
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 6fr;
+
+    gap: 30px;
+  }
+
+  .AttractiobPic {
+    height: 235px;
+  }
+
+  .BBox1,
+  .BBox2,
+  .BBox3,
+  .BBox4,
+  .BBox5,
+  .BBox6,
+  .BBox7,
+  .BBox8,
+  .BBox9,
+  .BBox10,
+  .BBox11,
+  .BBox12 {
+    height: 280px;
+  }
+}
+
+@media (max-width: 600px) {
+  .attractionsGroup {
+    max-width: 1170px;
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-auto-rows: 12fr;
+
+    gap: 30px;
+  }
+}
