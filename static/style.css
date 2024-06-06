@@ -20,9 +20,9 @@ body {
   min-height: 100vh;
 }
 
-.main {
+/* .main {
   flex: 1;
-}
+} */
 
 .navigation {
   display: flex;
@@ -227,6 +227,10 @@ body {
   align-items: center;
   padding: 40px 0px 40px 0px;
   box-sizing: border-box;
+}
+
+.adjfooter {
+  flex: 1;
 }
 
 .ListBar {
