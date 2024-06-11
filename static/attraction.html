@@ -4,6 +4,277 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Attraction</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <!-- <link rel="stylesheet" href="/static/style.css" /> -->
+    <link rel="stylesheet" href="/static/style2.css" />
   </head>
-  <body></body>
+  <body>
+    <div class="navigation">
+      <div class="HeadContainer">
+        <div class="LeftTitle">
+          <div class="header-2-bold-30">
+            <!-- 台北一日遊 -->
+            <span class="BacktoIndex">台北一日遊</span>
+          </div>
+        </div>
+        <div class="Frame2">
+          <div class="Frame1">
+            <div class="Itinerary">預定行程</div>
+            <div class="Sign_In_Up">登錄/註冊</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="navigation-placeholder"></div>
+    <div class="divider"></div>
+
+    <div class="attraction_itinerary">
+      <div class="picture_current">
+        <button class="control prev">
+          <img src="/static/icon/LeftArror_Default.png" alt="Previous" />
+        </button>
+        <div class="slider">
+          <div class="slide slide-1"></div>
+          <div class="slide slide-2"></div>
+          <div class="slide slide-3"></div>
+        </div>
+        <button class="control next">
+          <img src="/static/icon/RightArror_Default.png" alt="Next" />
+        </button>
+
+        <div class="dots">
+          <input type="radio" id="dot1" name="dot" />
+          <input type="radio" id="dot2" name="dot" />
+          <input type="radio" id="dot3" name="dot" />
+        </div>
+      </div>
+      <div class="picture_profile">
+        <div class="attractionName">景點</div>
+        <div class="attractionCategory">景點分類</div>
+        <div class="BookingForm">
+          <div class="BookingFormText1">訂購導覽行程</div>
+          <div class="BookingFormText2">
+            以此景點為中心的一日行程，帶您探索城市角落故事
+          </div>
+          <div class="BookingDate">
+            <div class="DateChoose">
+              <div class="DateText">選擇日期 :&nbsp;</div>
+              <input type="date" class="datecalendar" />
+            </div>
+          </div>
+          <div class="selectTime">
+            <div class="selectTimeText">選擇時間 :&nbsp;</div>
+            <div class="radioButton-field">
+              <div class="morning">
+                <input
+                  type="radio"
+                  id="morning"
+                  name="time"
+                  value="morning"
+                  checked
+                  onclick="updateFee()"
+                />
+                <label for="morning">上半天</label>
+              </div>
+              <div class="afternoon">
+                <input
+                  type="radio"
+                  id="afternoon"
+                  name="time"
+                  value="afternoon"
+                  onclick="updateFee()"
+                />
+                <label for="afternoon">下半天</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="tour_fee">
+            <div class="tour_fee_text">導覽費用:&nbsp;</div>
+            <div class="tour_fee_dollars">
+              新台幣<span class="tour_fee_amount">2000</span>元
+            </div>
+          </div>
+          <div class="submitButtonBookingForm">
+            <button class="BookingForm-button">開始預約行程</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider2"></div>
+
+    <div class="sectionInfo">
+      <div class="AttractionInfO">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim, aperiam
+        ipsum ipsa veniam rem temporibus et, pariatur explicabo consequuntur
+        dolore, aut incidunt deserunt nam magnam nihil animi. Quis perspiciatis
+        reiciendis voluptatem minus, provident dicta et id iusto delectus
+        officiis adipisci similique tempora dignissimos possimus? Magni
+        distinctio accusamus esse qui deserunt quasi officiis vitae unde nemo, u
+      </div>
+      <div class="address">
+        <div class="attractionAddressTitle">景點地址:</div>
+        <div class="attractionAddress">臺北市 大安區忠孝東路4段</div>
+      </div>
+      <div class="traffic">
+        <div class="trafficWay">交通方式:</div>
+        <div class="trafficInfo">
+          捷運站名：忠孝復興站4號出口1.公車：204、212、212直、232、232副、262、262(區間)、278、299、521、605、605(副)、605(新台五線)、667、903、忠孝新幹線至頂好市場站
+          2.車位：太平洋崇光百貨地下停車場或市民大道附近地下停車場
+        </div>
+      </div>
+    </div>
+    <div class="footerextend"></div>
+    <div class="footer">
+      <div class="footerText">COPYRIGHT © 2021 台北一日遊</div>
+    </div>
+
+    <script>
+      let slider;
+      let slides;
+      let prevButton;
+      let nextButton;
+      let dots;
+      let currentIndex = 0;
+
+      window.addEventListener("DOMContentLoaded", function () {
+        slider = document.querySelector(".slider");
+        slides = document.querySelectorAll(".slide");
+        prevButton = document.querySelector(".prev");
+        nextButton = document.querySelector(".next");
+        // 初始化 dots 容器
+        var dotsContainer = document.querySelector(".dots");
+        console.log("DOM fully loaded and parsed");
+
+        // 清空 slider 和 dots 容器
+        slider.innerHTML = "";
+        dotsContainer.innerHTML = "";
+
+        prevButton.addEventListener("click", () => {
+          showSlide(currentIndex - 1);
+        });
+
+        nextButton.addEventListener("click", () => {
+          showSlide(currentIndex + 1);
+        });
+
+        fetchAttraction().then(() => {
+          // 更新 dots 在 fetchAttraction 完成後
+          dots = document.querySelectorAll(".dots input[type='radio']");
+          updateDots();
+
+          // Optional: Auto-slide
+          setInterval(() => {
+            showSlide(currentIndex + 1);
+          }, 3000);
+        });
+
+        updateFee();
+
+        document
+          .querySelector(".BacktoIndex")
+          .addEventListener("click", function () {
+            window.location.href = `/`;
+          });
+      });
+
+      const urlSegments = window.location.pathname.split("/");
+      const attractionId = urlSegments[urlSegments.length - 1];
+
+      async function fetchAttraction() {
+        try {
+          const response = await fetch(`/api/attraction/${attractionId}`);
+          const data = await response.json();
+          const attractionNameContent = data["data"]["name"];
+          const attractionCATContent = data["data"]["category"];
+          const attractionInfo = data["data"]["description"];
+          const attractionAddress = data["data"]["address"];
+          const attractionTransport = data["data"]["transport"];
+          const attractionImg = data["data"]["images"];
+
+          document.querySelector(".attractionName").textContent =
+            attractionNameContent;
+          document.querySelector(".attractionCategory").textContent =
+            attractionCATContent;
+          document.querySelector(".AttractionInfO").textContent =
+            attractionInfo;
+          document.querySelector(".attractionAddress").textContent =
+            attractionAddress;
+          document.querySelector(".trafficInfo").textContent =
+            attractionTransport;
+
+          // 清空 slider 和 dots 容器
+          slider.innerHTML = "";
+          var dotsContainer = document.querySelector(".dots");
+          dotsContainer.innerHTML = "";
+
+          for (let i = 0; i < attractionImg.length; i++) {
+            var sliderbox = document.createElement("div");
+            var inputDot = document.createElement("input");
+            sliderbox.classList.add("slide");
+            sliderbox.style.backgroundImage = `url(${attractionImg[i]})`;
+            slider.appendChild(sliderbox);
+
+            inputDot.setAttribute("type", "radio");
+            inputDot.setAttribute("name", "dot");
+            if (i === currentIndex) {
+              inputDot.checked = true;
+            }
+            inputDot.addEventListener("click", () => {
+              showSlide(i);
+            });
+            dotsContainer.appendChild(inputDot);
+          }
+
+          // 更新 slides 和 dots
+          slides = document.querySelectorAll(".slide");
+        } catch (error) {
+          console.error("problem with fetch operation:", error);
+        }
+      }
+
+      function showSlide(index) {
+        if (index >= slides.length) {
+          currentIndex = 0;
+        } else if (index < 0) {
+          currentIndex = slides.length - 1;
+        } else {
+          currentIndex = index;
+        }
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        updateDots();
+      }
+
+      function updateDots() {
+        dots.forEach((dot, index) => {
+          dot.checked = index === currentIndex;
+        });
+      }
+
+      function updateFee() {
+        const morningFee = 2000;
+        const afternoonFee = 2500;
+        const feeElement = document.querySelector(".tour_fee_amount");
+
+        if (document.getElementById("morning").checked) {
+          feeElement.textContent = morningFee;
+        } else if (document.getElementById("afternoon").checked) {
+          feeElement.textContent = afternoonFee;
+        }
+      }
+    </script>
+  </body>
 </html>
