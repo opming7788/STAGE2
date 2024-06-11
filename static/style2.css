@@ -152,6 +152,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 20px;
+    margin: 0px 0px 40px 0px;
   }
 }
 
@@ -202,15 +203,6 @@ body {
     max-width: calc(100% - 20px);
   }
 }
-
-/* @media (max-width: 360px) {
-  .picture_current {
-    max-width: 360px;
-  }
-  .picture_profile {
-    max-width: 340px;
-  }
-} */
 
 .slider {
   display: flex;
@@ -400,7 +392,7 @@ body {
 
 /* 选中时的样式 */
 .radioButton-field input[type="radio"]:checked + label::before {
-  background-color: green;
+  background-color: rgba(68, 136, 153, 1);
   border-color: white;
 }
 
