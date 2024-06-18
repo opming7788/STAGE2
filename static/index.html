@@ -28,7 +28,12 @@
         <div class="Frame2">
           <div class="Frame1">
             <div class="Itinerary">預定行程</div>
-            <div class="Sign_In_Up">登錄/註冊</div>
+            <div class="Sign_In_Up" id="Sign_In_Up">
+              <span class="login" id="login">登錄/註冊</span>
+            </div>
+            <div class="Sign_Out" id="Sign_Out" onclick="LogOutBtnPush()">
+              登出系統
+            </div>
           </div>
         </div>
       </div>
@@ -195,6 +200,73 @@
     <div class="footer">
       <div class="footerText">COPYRIGHT © 2021 台北一日遊</div>
     </div>
+    <div id="overlay" class="overlay"></div>
+
+    <div id="LoginInForm" class="LoginInForm">
+      <div class="LoginBar"></div>
+      <div class="LoginClosebox" id="LogincloseBtn">
+        <img src="/static/icon/LoginClose.png" alt="closed" />
+      </div>
+      <div class="loginMemberMain">
+        <div class="loginMemberText">登入會員帳號</div>
+        <input
+          type="text"
+          class="MemberEmail"
+          placeholder="輸入電子信箱"
+          id="MemberEmail"
+        />
+        <input
+          type="text"
+          class="MemberPassword"
+          placeholder="輸入密碼"
+          id="MemberPassword"
+        />
+        <button class="LoginButton" onclick="LoginFetch()">登入帳戶</button>
+        <div class="LoginMsgText" id="LoginMsgText"></div>
+        <div class="WithoutAccountText">
+          還沒有帳戶?<span id="SwitchToRegister" class="SwitchToRegister"
+            >點此註冊</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <div id="registerForm" class="registerForm">
+      <div class="LoginBar"></div>
+      <div class="RegistercloseBtn" id="RegistercloseBtn">
+        <img src="/static/icon/LoginClose.png" alt="closed" />
+      </div>
+      <div class="loginMemberMain">
+        <div class="loginMemberText">註冊會員帳號</div>
+        <input
+          type="text"
+          class="AccountName"
+          placeholder="輸入姓名"
+          id="RegistAccountName"
+        />
+        <input
+          type="text"
+          class="MemberEmail"
+          placeholder="輸入電子信箱"
+          id="RegistMemberEmail"
+        />
+        <input
+          type="text"
+          class="MemberPassword"
+          placeholder="輸入密碼"
+          id="RegistMemberPassword"
+        />
+        <button class="LoginButton" onclick="RegisterFetch()">
+          註冊新帳戶
+        </button>
+        <div class="MsgText" id="MsgText">已經註冊帳戶</div>
+        <div class="WithoutAccountText">
+          已經有帳戶?<span id="SwitchToLogin" class="SwitchToLogin"
+            >點此登入</span
+          >
+        </div>
+      </div>
+    </div>
 
     <!-- <script src="/static/script.js"></script> -->
     <script>
@@ -208,12 +280,238 @@
         attractionsGroup.innerHTML = ""; //頁面載入時清空 attractionsGroup 內容
         startBBoxId = 0;
 
-        // console.log("網頁初始化startBBoxId:" + startBBoxId);
-
+        LoginTextSwitch();
+        LoginRegistActive();
+        SwitchToRegister();
+        SwitchToLogin();
         fetchMrts(); //將mrt捷運站放入水平滑動列表
 
         fetchFirstPageAttractions(); //執行景點grid箱子加入並加入景點資訊
       });
+
+      //右上登入註冊按鈕按下RegistercloseBtn
+      function LoginRegistActive() {
+        var loginBtn = document.getElementById("login");
+        var LoginInmodal = document.getElementById("LoginInForm");
+        var Registermodal = document.getElementById("registerForm");
+        var overlay = document.getElementById("overlay");
+        var LoginccloseBtn = document.getElementById("LogincloseBtn");
+        var RegistercloseBtn = document.getElementById("RegistercloseBtn");
+
+        loginBtn.addEventListener("click", function () {
+          LoginInmodal.style.display = "block";
+          overlay.style.display = "block";
+          document.getElementById("LoginMsgText").innerText = "";
+          document.getElementById("LoginMsgText").style.display = "none";
+        });
+
+        LoginccloseBtn.addEventListener("click", function () {
+          LoginInmodal.style.display = "none";
+          overlay.style.display = "none";
+          document.getElementById("LoginMsgText").innerText = "";
+          document.getElementById("LoginMsgText").style.display = "none";
+        });
+
+        RegistercloseBtn.addEventListener("click", function () {
+          Registermodal.style.display = "none";
+          overlay.style.display = "none";
+          document.getElementById("MsgText").innerText = "";
+          document.getElementById("MsgText").style.display = "none";
+        });
+
+        overlay.addEventListener("click", function () {
+          LoginInmodal.style.display = "none";
+          Registermodal.style.display = "none";
+          overlay.style.display = "none";
+        });
+      }
+
+      //切換到註冊面板
+      function SwitchToRegister() {
+        let SwitchToRegister = document.getElementById("SwitchToRegister");
+        let LoginInmodal = document.getElementById("LoginInForm");
+        let Registermodal = document.getElementById("registerForm");
+        SwitchToRegister.addEventListener("click", function () {
+          Registermodal.style.display = "block";
+          LoginInmodal.style.display = "none";
+          document.getElementById("MsgText").innerText = "";
+          document.getElementById("MsgText").style.display = "none";
+        });
+      }
+      //切換到登入面板
+      function SwitchToLogin() {
+        let SwitchToLogin = document.getElementById("SwitchToLogin");
+        let LoginInmodal = document.getElementById("LoginInForm");
+        let Registermodal = document.getElementById("registerForm");
+        SwitchToLogin.addEventListener("click", function () {
+          Registermodal.style.display = "none";
+          LoginInmodal.style.display = "block";
+          document.getElementById("LoginMsgText").innerText = "";
+          document.getElementById("LoginMsgText").style.display = "none";
+        });
+      }
+
+      //按下註冊面板下的註冊紐發送註冊資料
+      async function RegisterFetch() {
+        var username = document.getElementById("RegistAccountName").value;
+        var email = document.getElementById("RegistMemberEmail").value;
+        var password = document.getElementById("RegistMemberPassword").value;
+        if (!email || !password || !username) {
+          window.alert("請填寫完整的個人資料");
+          return; // 如果有未填寫的字段，停止執行後續程式碼
+        }
+
+        const userData = {
+          username: username,
+          email: email,
+          password: password,
+        };
+
+        try {
+          // const response = await fetch("/signup", {
+          const response = await fetch("/api/user", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userData),
+          });
+
+          const responseMessage = await response.json();
+          console.log(responseMessage);
+          const msgText = document.getElementById("MsgText");
+
+          if (!response.ok) {
+            if (response.status === 400) {
+              msgText.innerText = responseMessage.message;
+              msgText.style.display = "flex";
+              msgText.style.color = "red";
+            } else {
+              msgText.style.display = "none";
+              msgText.innerText = "";
+            }
+          } else {
+            if (response.status === 200) {
+              msgText.innerText = "註冊成功，請登入系統";
+              msgText.style.display = "flex";
+              msgText.style.color = "green";
+            }
+          }
+
+          // const user = await response.json();
+          // console.log("User created:", user);
+        } catch (error) {
+          console.error("Error:", error.message);
+          // 在這裡處理錯誤，顯示錯誤訊息於console
+        }
+      }
+
+      //按下登錄面板下的登錄紐發送登錄資料
+      async function LoginFetch() {
+        try {
+          // 獲取登入用戶的資料
+          var email = document.getElementById("MemberEmail").value;
+          var password = document.getElementById("MemberPassword").value;
+
+          if (!email || !password) {
+            window.alert("請填寫完整的電子郵件和密碼");
+            return; // 如果有未填寫的字段，停止執行後續程式碼
+          }
+
+          // 準備發送數據
+          var formData = new URLSearchParams();
+          formData.append("username", email);
+          formData.append("password", password);
+
+          // 發送post請求
+          // var response = await fetch("/token", {
+          var response = await fetch("/api/user/auth", {
+            // method: "POST",
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formData.toString(),
+          });
+
+          var data = await response.json();
+
+          if (!response.ok) {
+            if (response.status === 400) {
+              document.getElementById("LoginMsgText").style.display = "flex";
+              document.getElementById("LoginMsgText").innerText = data.message;
+
+              document.getElementById("LoginMsgText").style.color = "red";
+              console.log(data.message);
+            }
+          } else {
+            console.log(data);
+            // 將token存儲到localStorage
+            // localStorage.setItem("access_token", data.access_token);
+            localStorage.setItem("access_token", data.token);
+            window.location.href = window.location.href;
+          }
+        } catch (error) {
+          console.error("Error:", error.message);
+        }
+      }
+
+      //登錄狀態檢查
+      async function CheckingLoginStatus() {
+        let token = localStorage.getItem("access_token");
+        // console.log(token);
+        if (!token) {
+          console.error("No token found");
+          return false;
+        }
+        try {
+          // let response = await fetch("/LoginStatus", {
+          let response = await fetch("/api/user/auth", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          let data = await response.json();
+          if (!response.ok) {
+            throw new Error("未能獲取數據");
+          }
+
+          console.log(data);
+          return true;
+        } catch (error) {
+          console.error("Error:", error.message);
+          return False;
+        }
+      }
+
+      //置換右上角登入時候的狀態
+      async function LoginTextSwitch() {
+        let isLoggedIn = await CheckingLoginStatus();
+        let Sign_Out = document.getElementById("Sign_Out");
+        let Sign_In_Up = document.getElementById("Sign_In_Up");
+        if (isLoggedIn) {
+          // 用戶已登錄，置換右上角登錄文字為"登出系統"
+          Sign_In_Up.style.display = "none";
+          Sign_Out.style.display = "flex";
+        } else {
+          // 用戶未登錄，置換右上角登錄文字為"登入/註冊"
+          Sign_In_Up.style.display = "flex";
+          Sign_Out.style.display = "none";
+        }
+      }
+
+      //刪除jwt登錄toekn
+      function LogOutDeleteToken() {
+        localStorage.removeItem("access_token");
+      }
+
+      //按下右上角登出鈕，置換右上角登錄文字為"登入/註冊"
+      async function LogOutBtnPush() {
+        LogOutDeleteToken();
+        LoginTextSwitch();
+      }
+
       //將mrt捷運站放入水平滑動列表
       async function fetchMrts() {
         try {
