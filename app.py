@@ -1,19 +1,22 @@
 from fastapi import *
 from fastapi.responses import FileResponse
-from fastapi import Path, Query, Request, Depends, HTTPException
+from fastapi import Path, Query, Request, Depends, HTTPException,status
 from typing import List, Optional
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 import mysql.connector
 
+# import auth
+
 from fastapi.middleware.cors import CORSMiddleware
+
 
 # 創建mysql連接池
 dbconfig = {
     "host": "localhost",
     "user": "root",
-    "password": "xxxxxxxxxx",
     
+    "password":"xxxxxxxxxxxxxxxxx",
     "database": "taipeiattractions"
 }
 
@@ -29,8 +32,6 @@ except mysql.connector.Error as e:
 
 app = FastAPI()
 
-
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://127.0.0.1:5500"],  # 允許的來源
@@ -38,9 +39,6 @@ app.add_middleware(
     allow_methods=["*"],  # 允許的方法
     allow_headers=["*"],  # 允許的標頭
 )
-
-
-
 
 
 
@@ -65,6 +63,190 @@ async def thankyou(request: Request):
     return FileResponse("./static/thankyou.html", media_type="text/html")
 
 # ///////////////////////////////~我是分隔線~我是分隔線~////////////////////////////////////////
+
+from datetime import datetime, timedelta,timezone
+from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+from schemas import UserCreate, UserInDB, Token, RegistrationResponse, UserResponse
+
+SECRET_KEY = "your_secret_key"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 1440 #24小時
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+# 驗證輸入的密碼是否與資料庫密碼相同
+def verify_password(plain_password, hashed_password):
+    # return pwd_context.verify(plain_password, hashed_password)
+    if plain_password==hashed_password:
+        return True
+    return False
+
+#密碼在加密
+def get_password_hash(password):
+    # return pwd_context.hash(password)
+    return password
+
+#輸入email返回user資料
+def get_user(email: str):
+    con = connection_pool.get_connection()
+    try:
+        with con.cursor(dictionary=True) as cursor:
+            cursor.execute("SELECT * FROM memberData WHERE email = %s", (email,))
+            user = cursor.fetchone()
+            # print(user)
+            return user
+    except mysql.connector.Error as e:
+        print(f"Error fetching user: {e}")
+        return None
+    finally:
+        if con:
+            con.close()
+
+#驗證輸入的email和密碼
+def authenticate_user(email: str, password: str):
+    user = get_user(email) #輸入email返回user資料
+
+    #資料庫內若查無使用者則返回false
+    if not user:
+        return False
+
+    # 驗證輸入的密碼是否與資料庫密碼相同，不同就返回false
+    if not verify_password(password, user["hashed_password"]):
+        return False
+    return user
+
+# 產生JWT的Token
+def create_access_token(data: dict, expires_delta: timedelta = None):
+    to_encode = data.copy()
+    if expires_delta:
+        # expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        # expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+# class RegistrationResponse(BaseModel):
+#     ok: bool = True
+   
+# 註冊新會員
+# @app.post("/signup", response_model=UserInDB)
+@app.post("/api/user",response_model=RegistrationResponse, responses={
+    400: {
+        "description": "註冊失敗，重複的Email或其他原因",
+        "content": {"application/json": {"example": {"error": "true", "message": "Email 已經註冊帳戶"}}}
+    },
+    500: {
+        "description": "伺服器內部錯誤",
+        "content": {"application/json": {"example": {"error": "true", "message": "內部伺服器錯誤"}}}
+    },
+})
+def create_user(user: UserCreate):
+    con = connection_pool.get_connection()
+    try:
+        with con.cursor(dictionary=True) as cursor:
+            cursor.execute("SELECT * FROM memberData WHERE email = %s", (user.email,))
+            if cursor.fetchone():
+                return JSONResponse(status_code=400, content={"error": "true","message": "Email 已經註冊帳戶"})
+                # return HTTPException(status_code=400, detail="請按照情境提供對應的錯誤訊息")
+        hashed_password = get_password_hash(user.password)
+        
+        with con.cursor(dictionary=True) as cursor:
+            cursor.execute(
+                "INSERT INTO memberData (username, email, hashed_password) VALUES (%s, %s, %s)",
+                (user.username, user.email, hashed_password)
+            )
+            con.commit()
+            user_id = cursor.lastrowid
+        
+        # return UserInDB(id=user_id, username=user.username, email=user.email)
+        # return JSONResponse(status_code=200, content={"ok":true})
+        return RegistrationResponse()
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": "true","message": "伺服器內部錯誤"})
+    finally:
+        con.close()
+
+#登錄會員帳戶路由
+# @app.post("/token", response_model=Token)
+@app.put("/api/user/auth", response_model=Token ,responses={
+    400: {
+        "description": "登入失敗，帳號或密碼錯誤或其他原因",
+        "content": {"application/json": {"example": {"error": "true", "message": "登入失敗，帳號或密碼錯誤或其他原因"}}}
+    },
+    500: {
+        "description": "伺服器內部錯誤",
+        "content": {"application/json": {"example": {"error": "true", "message": "伺服器內部錯誤"}}}
+    },
+})
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    #由於OAuth2PasswordRequestForm在FastAPI中默認只接受欄位username和password，
+    #因此前端的代碼需要將郵箱位址放在username欄位中傳遞
+    user = authenticate_user(form_data.username, form_data.password)
+    
+    try:
+        if not user:
+            # raise HTTPException(
+            #     status_code=status.HTTP_401_UNAUTHORIZED,
+            #     detail="Incorrect email or password",
+            #     headers={"WWW-Authenticate": "Bearer"},
+            # )
+            return JSONResponse(status_code=400,content={"error": "true","message": "電子郵件或密碼錯誤"})
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        
+        access_token = create_access_token(
+            data={"sub": user["email"]}, expires_delta=access_token_expires
+        )
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": "true","message": "伺服器內部錯誤"})
+    # return {"access_token": access_token, "token_type": "bearer"}
+    # return {"access_token": access_token}
+    return {"token": access_token}
+
+
+
+
+#給定jwt的Token解密後返回使用者資料user，取得當前會員資訊
+@app.get("/api/user/auth", response_model=UserResponse)
+def get_current_user(request: Request):
+    auth_header = request.headers.get("Authorization")
+    if auth_header is None or not auth_header.startswith("Bearer "):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    token = auth_header.split(" ")[1]
+    
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    
+    user = get_user(email)
+    if user is None:
+        raise credentials_exception
+    
+    return UserResponse(data=UserInDB(**user))
+
+
+
+
 
 class Attraction(BaseModel):
     id: Optional[int]
