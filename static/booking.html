@@ -270,16 +270,18 @@
           showElements,
         };
       })();
+      let LoginUserData;
+      window.addEventListener("DOMContentLoaded", async function () {
+        pageManager.hideElements();
+        await LoginTextSwitch();
+        await GetBookingData();
 
-      window.addEventListener("DOMContentLoaded", function () {
-        GetBookingData();
-
-        LoginTextSwitch();
         LoginRegistActive();
         SwitchToRegister();
         SwitchToLogin();
 
-        pageManager.hideElements();
+        // pageManager.hideElements();
+        // console.log("LoginUserData:", LoginUserData);
         // pageManager.showElements();
 
         //回到首頁
@@ -293,8 +295,8 @@
       //網頁初始化登入者的資料Loading
       async function GetBookingData() {
         let token = localStorage.getItem("access_token");
-        let isLoggedIn = await CheckingLoginStatus();
-        if (!isLoggedIn) {
+        // let isLoggedIn = await CheckingLoginStatus();
+        if (!token) {
           window.location.href = "/";
           console.error("No token found");
           return;
@@ -308,23 +310,24 @@
             },
           });
 
-          let UsenameResponse = await fetch("/api/user/auth", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
+          // let UsenameResponse = await fetch("/api/user/auth", {
+          //   method: "GET",
+          //   headers: {
+          //     Authorization: `Bearer ${token}`,
+          //   },
+          // });
+          // let Usename = await UsenameResponse.json();
+          // Email = Usename["data"]["email"];
+          // Usename = Usename["data"]["username"];
+          console.log("LoginUserDatainGet:", LoginUserData);
           let data = await response.json();
-          let Usename = await UsenameResponse.json();
-          Email = Usename["data"]["email"];
-          Usename = Usename["data"]["username"];
-          console.log(Usename);
-          console.log(data["data"]);
+          Usename = LoginUserData["username"];
+          Email = LoginUserData["email"];
+          console.log(Usename, Email);
 
-          //如果使用者有登記的行程返回Fetch Booking API to get booking data
+          //如果使用者有登記行程則Fetch Booking API to get booking data and render Page
           if (data["data"] != null) {
-            console.log(data["data"]["attraction"]);
+            // console.log(data["data"]["attraction"]);
             if (!response.ok) {
               throw new Error("未能獲取數據");
             }
@@ -369,7 +372,7 @@
             finalFee.innerText = AttractionPrice;
             pageManager.showElements(); // render the booking page based on the response of API
           } else {
-            //If there is no booking data, render 沒有預定行程 text on the bookingpage.
+            //If there is no booking data, render "沒有預定行程" text on the bookingpage.
             let usernameforHTML = document.getElementById("username");
             usernameforHTML.innerText = Usename;
             pageManager.hideElements();
@@ -413,7 +416,7 @@
         }
       }
 
-      //右上登入註冊按鈕按下RegistercloseBtn
+      //初始化右上登入/註冊面板右上角的按下closeBtn效果
       function LoginRegistActive() {
         var loginBtn = document.getElementById("login");
         var LoginInmodal = document.getElementById("LoginInForm");
@@ -599,8 +602,8 @@
           if (!response.ok) {
             throw new Error("未能獲取數據");
           }
-
-          console.log(data);
+          LoginUserData = data["data"];
+          console.log("data:", data["data"]["username"]);
           return true;
         } catch (error) {
           console.error("Error:", error.message);
