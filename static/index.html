@@ -27,7 +27,9 @@
         </div>
         <div class="Frame2">
           <div class="Frame1">
-            <div class="Itinerary">預定行程</div>
+            <div class="Itinerary" id="Itinerary" onclick="myItinerary()">
+              預定行程
+            </div>
             <div class="Sign_In_Up" id="Sign_In_Up">
               <span class="login" id="login">登錄/註冊</span>
             </div>
@@ -289,6 +291,22 @@
         fetchFirstPageAttractions(); //執行景點grid箱子加入並加入景點資訊
       });
 
+      //右上角"預定行程"按鈕按下
+      async function myItinerary() {
+        // const token = localStorage.getItem("access_token");
+        let isLoggedIn = await CheckingLoginStatus();
+        if (!isLoggedIn) {
+          let LoginInmodal = document.getElementById("LoginInForm");
+          LoginInmodal.style.display = "block";
+          document.getElementById("LoginMsgText").innerText = "";
+          document.getElementById("LoginMsgText").style.display = "none";
+          document.getElementById("overlay").style.display = "block";
+          return;
+        } else {
+          window.location.href = `/booking`;
+        }
+      }
+
       //右上登入註冊按鈕按下RegistercloseBtn
       function LoginRegistActive() {
         var loginBtn = document.getElementById("login");
@@ -481,7 +499,7 @@
           return true;
         } catch (error) {
           console.error("Error:", error.message);
-          return False;
+          return false;
         }
       }
 

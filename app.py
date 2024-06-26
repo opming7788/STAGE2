@@ -15,8 +15,8 @@ from fastapi.middleware.cors import CORSMiddleware
 dbconfig = {
     "host": "localhost",
     "user": "root",
+    # "password":"xxxxxxxxxxxxxxxxx",
     
-    "password":"xxxxxxxxxxxxxxxxx",
     "database": "taipeiattractions"
 }
 
@@ -245,6 +245,169 @@ def get_current_user(request: Request):
     return UserResponse(data=UserInDB(**user))
 
 
+# ////////////////////////////////////////////////Booking API////////////////////////////////////////////////////
+
+from datetime import date
+from decimal import Decimal
+import json
+
+@app.get("/api/booking")
+async def get_booking(request: Request):
+    auth_header = request.headers.get("Authorization")
+    if auth_header is None or not auth_header.startswith("Bearer "):
+        return JSONResponse(status_code=403, content={"error": True,"message": "未登入系統，拒絕存取"})
+    token = auth_header.split(" ")[1]
+    con = connection_pool.get_connection()
+    
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        member_email = payload["sub"]
+        with con.cursor() as cursor:
+            cursor.execute("SELECT memberData.id FROM memberData where memberData.email=%s",(member_email,))
+            memberId=cursor.fetchone()[0]
+            
+            if memberId is None:
+                return JSONResponse(status_code=404, content={"error": True, "message": "會員不存在"})
+
+            # print("memberId:",memberId)
+        with con.cursor() as cursor:
+            cursor.execute("SELECT memberData.id ,BookingAttraction.attraction_id , BookingAttraction.Bookingdate ,\
+            BookingAttraction.Bookingtime,BookingAttraction.price FROM memberData \
+            JOIN BookingAttraction ON memberData.id = BookingAttraction.member_id \
+            WHERE memberData.id =%s;", (memberId,))
+            results = cursor.fetchall()
+            # print(f"Query Results: {results}")
+
+        if not results:
+            return JSONResponse(status_code=200, content={"data": None})
+          
+        
+        # con = connection_pool.get_connection()
+        for item in results:
+            attraction_id, booking_date, booking_time, price = item[1:]
+            booking_date_str = booking_date.strftime("%Y-%m-%d")
+            # print(item)
+            # print(f"Processing attraction_id: {attraction_id}")
+            with con.cursor() as cursor:
+                cursor.execute("SELECT attractions.id,attractions.name,attractions.address ,images.image_url FROM attractions JOIN images ON attractions.id = images.attraction_id WHERE attractions.id = %s",(attraction_id,))
+                attraction = cursor.fetchall()[0]
+                # print("attraction:",attraction)
+
+            attractionData = {
+                "id": attraction[0],
+                "name": attraction[1],
+                "address": attraction[2],
+                "image": attraction[3]
+            }
+
+            price_float = float(price) 
+
+            bookingData = {
+                "attraction": attractionData,
+                # "date": booking_date,
+                "date": booking_date_str,
+                "time": booking_time,
+                # "price": price
+                "price": price_float
+            }
+        # print("bookingData:",bookingData)
+        return JSONResponse(status_code=200, content={"data": bookingData})
+        
+    except Exception as e:
+        print(f"Internal server error: {e}")
+        return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+    finally:
+        con.close()
+
+from typing import Literal
+
+class BookingRequest(BaseModel):
+    attractionId: int
+    date: date
+    time: Literal['morning', 'afternoon']
+    price: float
+
+@app.post("/api/booking")
+async def post_booking(request: Request,booking: BookingRequest):
+    con = connection_pool.get_connection()
+    auth_header = request.headers.get("Authorization")
+    if auth_header is None or not auth_header.startswith("Bearer "):
+        return JSONResponse(status_code=403, content={"error": True,"message": "未登入系統，拒絕存取"})
+    
+    token = auth_header.split(" ")[1]
+    
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        
+        with con.cursor() as cursor:
+            cursor.execute("SELECT memberData.id FROM memberData where memberData.email=%s",(payload["sub"],))
+            # print(cursor.fetchone())
+            memberId=cursor.fetchone()
+            # print("memberI:",memberId)
+            if memberId is None:
+                return JSONResponse(status_code=403, content={"error": True,"message": "未登入系統，拒絕存取"})
+            memberId=memberId[0]
+            cursor.execute("SELECT member_id FROM BookingAttraction WHERE member_id=%s",(memberId,))
+            BookingAttractionMemberId=cursor.fetchone()
+            if BookingAttractionMemberId is None:
+                cursor.execute(
+                    "INSERT INTO BookingAttraction (attraction_id, Bookingdate, Bookingtime,price,member_id) VALUES (%s, %s, %s,%s,%s)",
+                    (booking.attractionId, booking.date,booking.time,booking.price,memberId)
+                )
+            else:
+                # BookingAttractionMemberId=BookingAttractionMemberId[0]
+                cursor.execute("UPDATE BookingAttraction SET attraction_id=%s, Bookingdate = %s, Bookingtime = %s, \
+                price = %s WHERE member_id = %s;",(booking.attractionId, booking.date,booking.time,booking.price,memberId))
+
+            con.commit()
+        return JSONResponse(status_code=200, content={"ok": True})
+    except JWTError:
+        return JSONResponse(status_code=403, content={"error": True,"message": "未登入系統，拒絕存取"})
+    except ValidationError as e:
+        return JSONResponse(status_code=400, content={"error": True, "message": "建立失敗，輸入不正確或其他原因"})
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": True,"message": "伺服器內部錯誤"})
+    finally:
+        con.close()
+
+
+@app.delete("/api/booking")
+async def delete_booking(request: Request):
+    con = connection_pool.get_connection()
+    auth_header = request.headers.get("Authorization")
+    if auth_header is None or not auth_header.startswith("Bearer "):
+        return JSONResponse(status_code=403, content={"error": True,"message": "未登入系統，拒絕存取"})
+    token = auth_header.split(" ")[1]
+    
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            return JSONResponse(status_code=403, content={"error": True,"message": "未登入系統，拒絕存取"})
+    
+        user = get_user(email)
+        if user is None:
+            return JSONResponse(status_code=403, content={"error": True,"message": "未登入系統，拒絕存取"})
+        print("user:",user["id"])
+
+        
+        with con.cursor() as cursor:
+            cursor.execute("DELETE FROM BookingAttraction WHERE member_id = %s", (user["id"],))
+
+            con.commit()
+    except:
+        return JSONResponse(status_code=500, content={"error": True,"message": "伺服器內部錯誤"})
+
+    finally:
+        con.close()
+
+    return JSONResponse(status_code=200, content={"ok": True})
+    
+
+
+
+
+# ////////////////////////////////////////////////Booking API////////////////////////////////////////////////////
 
 
 

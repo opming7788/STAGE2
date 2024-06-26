@@ -14,12 +14,11 @@ body {
   align-items: center;
   min-height: 100vh;
 }
-
 .navigation {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 0px 10px 0px;
+  padding: 10px 10px 10px 10px;
   box-sizing: border-box;
 
   position: fixed;
@@ -32,18 +31,6 @@ body {
 
 .navigation-placeholder {
   height: 54px;
-}
-
-.HeroSection {
-  /* padding-top: 54px; */
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 320px;
-  background-image: url("welcome_image.png");
-  background-size: cover;
-  background-position: top;
 }
 
 .HeadContainer {
@@ -91,6 +78,7 @@ body {
 
   color: rgba(102, 102, 102, 1); /* 文字颜色 */
 }
+
 .Itinerary {
   display: flex;
   justify-content: center;
@@ -151,306 +139,305 @@ body {
   /* margin-bottom: 40px; */
   width: 100%;
   max-width: 1200px;
+  padding: 0px 10px 0px 10px;
+  box-sizing: border-box;
 }
 
-.attraction_itinerary {
+.InfoHeader {
   width: 100%;
-  max-width: 1200px;
-  padding: 0px 15px 0px 15px;
-  box-sizing: border-box;
   display: flex;
-  margin: 40px 0px 40px 0px;
   align-items: center;
+  text-align: left;
+
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: left;
+  color: rgba(102, 102, 102, 1);
+}
+
+.noItinerary {
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 13.3px;
+  text-align: left;
+  color: rgba(102, 102, 102, 1);
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .InfoHeader {
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+  }
+}
+
+.bookingItinerary {
+  display: flex;
+  flex-direction: column;
+  max-width: 1000px;
+  width: 100%;
+  margin: 40px 0px 40px 0px;
+  gap: 30px;
+  /* padding: 0px 15px 0px 15px; */
+  box-sizing: border-box;
+}
+
+.attractionSetion {
+  /* height: 200px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 10px 0px 10px;
+  /* background-color: blue; */
+}
+
+.bookingInfo {
+  width: 100%;
+  display: flex;
+  /* flex-direction: row; */
+  /* align-items: center; */
+  /* justify-content: space-between; */
   /* justify-content: center; */
-  justify-content: space-between;
   gap: 30px;
 }
 
-@media (max-width: 850px) {
-  .attraction_itinerary {
+.AttractionPic {
+  background-image: url("test.png");
+  flex: 0 0 250px;
+  max-width: 250px;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.AttractionInfo {
+  display: flex;
+  /* flex-grow: 1; */
+  flex-direction: column;
+  flex: 0 1 700px;
+  max-width: 700px;
+  /* width: 100%; */
+  /* gap: 20px; */
+  position: relative;
+  /* background-color: aqua; */
+}
+
+@media (max-width: 650px) {
+  .bookingInfo {
+    width: 100%;
+    justify-content: flex-start;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin: 0px 0px 40px 0px;
   }
-}
-
-.picture_current {
-  /* width: 540px; */
-  flex: 0 1 540px;
-  max-width: 540px;
-  height: 400px;
-  background-color: rebeccapurple;
-  background-size: cover;
-  background-position: center;
-  border-radius: 5px;
-
-  display: flex;
-
-  align-items: center;
-
-  position: relative;
-  overflow: hidden;
-}
-
-.picture_profile {
-  display: flex;
-  flex-direction: column;
-  /* width: 600px; */
-  max-width: 600px;
-  flex: 0 1 600px;
-  height: 400px;
-  /* background-color: red; */
-  gap: 20px;
-}
-
-@media (max-width: 850px) {
-  .attraction_itinerary {
+  .AttractionPic {
     width: 100%;
-    padding: 0px;
-  }
-  .picture_current {
-    width: 100%;
-    /* max-width: 650px; */
-    flex: 0 1 350px;
+    flex: 0 1 200px;
     max-width: 100%;
   }
-
-  .picture_profile {
+  .AttractionInfo {
     width: 100%;
-    flex: 0 1 400px;
-    max-width: calc(100% - 20px);
+    flex: 0 1 200px;
   }
 }
 
-.slider {
-  display: flex;
-  transition: transform 0.5s ease;
-  height: 100%;
-  width: 100%;
-}
-
-.slide {
-  min-width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-}
-
-.control {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
+.deleteBooking {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1;
+  right: 0px;
+  /* bottom: 0px; */
 }
-
-.control img {
-  width: 32px;
-  height: 32px;
-}
-
-.control.prev:hover img {
-  content: url("/static/icon/LeftArror_Hovered.png");
-}
-
-.control.next:hover img {
-  content: url("/static/icon/RightArror_Hovered.png");
-}
-
-.prev {
-  left: 10px;
-}
-.next {
-  right: 10px;
-}
-
-.dots {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-}
-.dots input[type="radio"] {
-  appearance: none;
-  width: 12px;
-  height: 12px;
-  background-color: rgba(255, 255, 255, 1);
-  border: 1px solid rgba(255, 255, 255, 1);
-  border-radius: 50%;
+.deleteBooking img {
+  height: 30px;
+  width: 30px;
   cursor: pointer;
 }
-.dots input[type="radio"]:checked {
-  background-color: black;
+
+@media (max-width: 650px) {
+  .deleteBooking {
+    bottom: 0px;
+  }
+  .bookingItinerary {
+    margin-bottom: 30px;
+  }
 }
 
-/* .picture_profile {
+.AttrInfoTitle {
+  height: 24px;
   display: flex;
-  flex-direction: column;
-  width: 600px;
-  height: 400px;
-  background-color: red;
-  gap: 20px;
-} */
-
-.BookingForm {
-  width: 100%;
-  height: 302px;
-  background-color: rgba(232, 232, 232, 1);
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 15px;
-  box-sizing: border-box;
-}
-.BookingFormText1,
-.BookingFormText2 {
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 24px;
-  text-align: left;
-  color: rgba(102, 102, 102, 1);
-}
-.BookingFormText1 {
-  font-weight: 700;
-}
-.BookingFormText2 {
-  font-weight: 400;
-}
-
-.BookingDate {
-  display: flex;
+  align-items: center;
   justify-content: flex-start;
-}
-
-.DateChoose {
-  width: 50%;
-  display: flex;
-}
-.DateText {
-  display: flex;
-  align-items: center;
   font-family: "Noto Sans TC", sans-serif;
   font-size: 16px;
   font-weight: 700;
-  line-height: 24px;
-  text-align: left;
-  color: rgba(102, 102, 102, 1);
-}
-.datecalendar {
-  /* width: 193px; */
-  /* width: 100%; */
-  flex: 1;
-  height: 35px;
-}
-
-.selectTime {
-  display: flex;
-  flex-direction: row;
-}
-
-.selectTime {
-  display: flex;
-  align-items: center;
-  height: 22px;
-
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 16px;
-
   line-height: 13.3px;
   text-align: left;
-  color: rgba(102, 102, 102, 1);
-}
-.selectTimeText {
-  font-weight: 700;
+  color: rgba(68, 136, 153, 1);
 }
 
-.radioButton-field {
-  height: 22px;
+.AttrInfoDate,
+.AttrInfoTime,
+.AttrInfoFee,
+.AttrInfoLoc {
+  height: 24px;
   display: flex;
   align-items: center;
-  font-weight: 400;
-}
-.morning {
-  padding: 0px 8px 0px 5px;
-  box-sizing: border-box;
-}
-
-.afternoon {
-  padding: 0px 8px 0px 5px;
-  box-sizing: border-box;
-}
-
-/* 隐藏原生的单选按钮 */
-.radioButton-field input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* 自定义单选按钮 */
-.radioButton-field label::before {
-  content: "";
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  background-color: #fff;
-  vertical-align: middle;
-}
-
-/* 选中时的样式 */
-.radioButton-field input[type="radio"]:checked + label::before {
-  background-color: rgba(68, 136, 153, 1);
-  border-color: white;
-}
-
-/* 保持标签文本与自定义单选按钮对齐 */
-.radioButton-field label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.tour_fee {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 22px;
+  justify-content: flex-start;
   font-family: "Noto Sans TC", sans-serif;
   font-size: 16px;
-
+  font-weight: 700;
   line-height: 13.3px;
   text-align: left;
   color: rgba(102, 102, 102, 1);
 }
 
-.tour_fee_text {
-  width: 81px;
-  font-weight: 700;
+.AttrInfoTitle {
+  margin-bottom: 20px;
 }
-.tour_fee_dollars {
-  display: flex;
-  align-items: center;
+.AttrInfoDate,
+.AttrInfoTime,
+.AttrInfoFee,
+.AttrInfoLoc {
+  margin-bottom: 10px;
+}
+.BookingDate,
+.travelTime,
+.travelFee,
+.travelLoc {
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
   font-weight: 400;
-  height: 22px;
-  min-width: 108px;
-  justify-content: space-between;
+  line-height: 13.3px;
+  text-align: left;
+  color: rgba(102, 102, 102, 1);
 }
 
-.submitButtonBookingForm {
-  width: 154px;
+.ContactInfo {
+  /* height: 1000px; */
+  max-width: 1000px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* background-color: yellow; */
+  padding: 40px 10px 40px 10px;
+  box-sizing: border-box;
+  color: rgba(102, 102, 102, 1);
+}
+.ContactInfoTitle {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+.ContactInfoName,
+.ContactInfoEMail,
+.ContactInfoPhoneNum {
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 13.3px;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.ContactInfoNotice {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 13.3px;
+  text-align: left;
+}
+
+@media (max-width: 650px) {
+  .ContactInfoNotice {
+    height: auto;
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 23.17px;
+    text-align: left;
+  }
+}
+.inputInfo {
+  height: 38px;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid rgba(232, 232, 232, 1);
+  border-radius: 5px;
+  color: rgba(0, 0, 0, 1);
+}
+
+.CreditCardInfo {
+  display: flex;
+  flex-direction: column;
+  color: rgba(102, 102, 102, 1);
+  width: 100%;
+  padding: 40px 10px 40px 10px;
+  box-sizing: border-box;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.CreditCardTitle {
+  display: flex;
+  align-items: center;
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.CreditCardNum,
+.CreditCardExpiredTime,
+.CreditCardCVC {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 13.3px;
+  text-align: left;
+}
+
+.bookinConfirm {
+  width: 100%;
+  max-width: 1000px;
+  margin: 40px 0px 40px 0px;
+  padding: 0px 10px 0px 10px;
+  box-sizing: border-box;
+
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 13.3px;
+  text-align: right;
+
+  color: rgba(102, 102, 102, 1);
+
+  position: relative;
+}
+
+.ConfirmButton {
+  width: 173px;
   height: 36px;
 
   font-family: "Noto Sans TC", sans-serif; /* 字體 */
@@ -464,119 +451,27 @@ body {
   justify-content: center;
   background-color: rgba(68, 136, 153, 1);
   border-radius: 5px;
+
+  position: absolute;
+  right: 10px;
+  top: 40px;
 }
 
-.BookingForm-button {
+.BookingButton {
   background-color: rgba(68, 136, 153, 1);
   color: white;
 }
 
-.BookingForm-button:hover {
+.BookingButton:hover {
   /* background-color: #45a049;  */
   cursor: pointer;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.BookingForm-button:active {
+.BookingButton:active {
   /* background-color: #3e8e41; */
   /* box-shadow: 0 5px #666; */
   transform: translateY(2px);
-}
-
-.attractionName {
-  display: flex;
-  align-items: center;
-  height: 33px;
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 24px;
-  text-align: left;
-  color: rgba(102, 102, 102, 1);
-}
-
-.attractionCategory {
-  height: 22px;
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 13.3px;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  color: rgba(102, 102, 102, 1);
-}
-
-.sectionInfo {
-  max-width: 1200px;
-  /* height: 362px; */
-  /* background-color: greenyellow; */
-  margin-top: 40px;
-  margin-bottom: 40px;
-  padding: 10px;
-  box-sizing: border-box;
-
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.AttractionInfO {
-  font-family: "Noto Sans TC", sans-serif;
-  font-style: normal;
-  font-size: 16px;
-
-  font-weight: 400;
-  line-height: 23.17px;
-  text-align: left;
-  color: rgba(102, 102, 102, 1);
-}
-
-.attractionAddressTitle {
-  font-family: "Noto Sans TC", sans-serif;
-  font-style: normal;
-  font-size: 16px;
-  height: 32px;
-  font-weight: 700;
-  line-height: 23.17px;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  color: rgba(102, 102, 102, 1);
-}
-.attractionAddress {
-  font-family: "Noto Sans TC", sans-serif;
-  font-style: normal;
-  font-size: 16px;
-  height: 24px;
-  font-weight: 400;
-  line-height: 23.17px;
-  text-align: left;
-  color: rgba(102, 102, 102, 1);
-}
-
-.trafficWay {
-  font-family: "Noto Sans TC", sans-serif;
-  font-style: normal;
-  font-size: 16px;
-  height: 32px;
-  font-weight: 700;
-  line-height: 23.17px;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  color: rgba(102, 102, 102, 1);
-}
-
-.trafficInfo {
-  font-family: "Noto Sans TC", sans-serif;
-  font-style: normal;
-  font-size: 16px;
-  /* height: 24px; */
-  font-weight: 400;
-  line-height: 23.17px;
-  text-align: left;
-  color: rgba(102, 102, 102, 1);
 }
 
 .footerextend {
@@ -589,6 +484,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  box-sizing: border-box;
 }
 .footerText {
   display: flex;
@@ -599,6 +497,7 @@ body {
   font-weight: 700;
   line-height: 13.3px;
   color: white;
+  height: 100%;
 }
 
 .overlay {

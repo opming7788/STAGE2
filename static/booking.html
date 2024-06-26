@@ -4,6 +4,642 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Booking</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/style3.css" />
   </head>
-  <body></body>
+  <body>
+    <div class="navigation">
+      <div class="HeadContainer">
+        <div class="LeftTitle">
+          <div class="header-2-bold-30">
+            <!-- 台北一日遊 -->
+            <span class="BacktoIndex">台北一日遊</span>
+          </div>
+        </div>
+        <div class="Frame2">
+          <div class="Frame1">
+            <div class="Itinerary" id="Itinerary" onclick="myItinerary()">
+              預定行程
+            </div>
+            <div class="Sign_In_Up" id="Sign_In_Up">
+              <span class="login" id="login">登錄/註冊</span>
+            </div>
+            <div class="Sign_Out" id="Sign_Out" onclick="LogOutBtnPush()">
+              登出系統
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="navigation-placeholder"></div>
+    <div class="divider"></div>
+
+    <div class="bookingItinerary">
+      <div class="InfoHeader">
+        你好，
+        <span class="username" id="username">使用者</span>
+        ，待預定的行程如下:
+      </div>
+      <div class="noItinerary" id="noItinerary">目前沒有任何代預定的行程</div>
+      <div class="attractionSetion" id="attractionSetion">
+        <div class="bookingInfo">
+          <div class="AttractionPic" id="AttractionPic"></div>
+          <div class="AttractionInfo">
+            <div class="AttrInfoTitle">
+              台北一日遊 :&nbsp;<span id="attractionName">平安鐘</span>
+            </div>
+            <div class="AttrInfoDate">
+              日期 :&nbsp;&nbsp;<span class="BookingDate" id="BookingDate"
+                >2021-04-23</span
+              >
+            </div>
+            <div class="AttrInfoTime">
+              時間 :&nbsp;&nbsp;<span class="travelTime" id="travelTime"
+                >早上9點到下午4點</span
+              >
+            </div>
+            <div class="AttrInfoFee">
+              費用 :&nbsp;&nbsp;新台幣&nbsp;<span
+                class="travelFee"
+                id="travelFee"
+                >2000元</span
+              >
+            </div>
+            <div class="AttrInfoLoc">
+              地點 :&nbsp;&nbsp;<span class="travelLoc" id="travelLoc"
+                >台北市 大安區忠孝東路4段</span
+              >
+            </div>
+            <div
+              class="deleteBooking"
+              id="deleteBooking"
+              onclick="DeleteBooking()"
+            >
+              <img src="/static/icon/TrashCan.png" alt="delete" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider2" id="dividerL1"></div>
+    <div class="ContactInfo" id="ContactInfo">
+      <div class="ContactInfoTitle">您的聯絡資訊</div>
+      <div class="ContactInfoName">
+        聯絡姓名 :&nbsp;
+        <input
+          type="text"
+          placeholder="輸入姓名"
+          class="inputInfo"
+          id="contactName"
+        />
+      </div>
+      <div class="ContactInfoEMail">
+        聯絡信箱 :&nbsp;
+        <input
+          type="text"
+          placeholder="輸入信箱"
+          class="inputInfo"
+          id="contactEmail"
+        />
+      </div>
+      <div class="ContactInfoPhoneNum">
+        手機號碼 :&nbsp;
+        <input type="text" placeholder="輸入手機號碼" class="inputInfo" />
+      </div>
+      <div class="ContactInfoNotice">
+        請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
+      </div>
+    </div>
+    <div class="divider2" id="dividerL2"></div>
+    <div class="CreditCardInfo" id="CreditCardInfo">
+      <div class="CreditCardTitle">信用卡付款資訊</div>
+      <div class="CreditCardNum">
+        卡片號碼 :&nbsp;
+        <input
+          type="password"
+          placeholder="**** **** **** ****"
+          class="inputInfo"
+        />
+      </div>
+      <div class="CreditCardExpiredTime">
+        過期時間 :&nbsp;
+        <input type="month" class="inputInfo" />
+      </div>
+      <div class="CreditCardCVC">
+        驗證密碼 :&nbsp;
+        <input type="password" placeholder="CVV" class="inputInfo" />
+      </div>
+    </div>
+    <div class="divider2" id="dividerL3"></div>
+    <div class="bookinConfirm" id="bookinConfirm">
+      <div class="totalPrice">
+        總價 : 新台幣&nbsp;<span id="finalFee">2000</span>&nbsp;元
+      </div>
+      <div class="ConfirmButton">
+        <button class="BookingButton">確認訂購並付款</button>
+      </div>
+    </div>
+
+    <div class="footerextend" id="footerextend"></div>
+    <div class="footer" id="footer">
+      <div class="footerText">COPYRIGHT © 2021 台北一日遊</div>
+    </div>
+
+    <div id="overlay" class="overlay"></div>
+
+    <div id="LoginInForm" class="LoginInForm">
+      <div class="LoginBar"></div>
+      <div class="LoginClosebox" id="LogincloseBtn">
+        <img src="/static/icon/LoginClose.png" alt="closed" />
+      </div>
+      <div class="loginMemberMain">
+        <div class="loginMemberText">登入會員帳號</div>
+        <input
+          type="text"
+          class="MemberEmail"
+          placeholder="輸入電子信箱"
+          id="MemberEmail"
+        />
+        <input
+          type="password"
+          class="MemberPassword"
+          placeholder="輸入密碼"
+          id="MemberPassword"
+        />
+        <button class="LoginButton" onclick="LoginFetch()">登入帳戶</button>
+        <div class="LoginMsgText" id="LoginMsgText"></div>
+        <div class="WithoutAccountText">
+          還沒有帳戶?<span id="SwitchToRegister" class="SwitchToRegister"
+            >點此註冊</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <div id="registerForm" class="registerForm">
+      <div class="LoginBar"></div>
+      <div class="RegistercloseBtn" id="RegistercloseBtn">
+        <img src="/static/icon/LoginClose.png" alt="closed" />
+      </div>
+      <div class="loginMemberMain">
+        <div class="loginMemberText">註冊會員帳號</div>
+        <input
+          type="text"
+          class="AccountName"
+          placeholder="輸入姓名"
+          id="RegistAccountName"
+        />
+        <input
+          type="text"
+          class="MemberEmail"
+          placeholder="輸入電子信箱"
+          id="RegistMemberEmail"
+        />
+        <input
+          type="password"
+          class="MemberPassword"
+          placeholder="輸入密碼"
+          id="RegistMemberPassword"
+        />
+        <button class="LoginButton" onclick="RegisterFetch()">
+          註冊新帳戶
+        </button>
+        <div class="MsgText" id="MsgText">已經註冊帳戶</div>
+        <div class="WithoutAccountText">
+          已經有帳戶?<span id="SwitchToLogin" class="SwitchToLogin"
+            >點此登入</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <script>
+      //整理網頁，更新網頁元素
+      const pageManager = (function () {
+        const elements = document.querySelectorAll(
+          "#attractionSetion, #dividerL1, #ContactInfo, #dividerL2, #CreditCardInfo, #dividerL3, #bookinConfirm"
+        );
+        const originalDisplay = [];
+        const noItinerary = document.getElementById("noItinerary");
+        const footer = document.getElementById("footer");
+        const footerextend = document.getElementById("footerextend");
+
+        // 保存原始 display 屬性
+        elements.forEach((element) => {
+          originalDisplay.push({
+            element: element,
+            display: window.getComputedStyle(element).display,
+          });
+        });
+
+        function hideElements() {
+          elements.forEach((element) => {
+            element.style.display = "none";
+          });
+          noItinerary.style.display = "block";
+          footer.style.flex = "1";
+          footerextend.style.flex = "0";
+          footer.style.alignItems = "flex-start";
+        }
+
+        function showElements() {
+          originalDisplay.forEach((item) => {
+            item.element.style.display = item.display;
+          });
+          noItinerary.style.display = "none";
+          footer.style.flex = "0";
+          footerextend.style.flex = "1";
+          footer.style.alignItems = "center";
+        }
+
+        return {
+          hideElements,
+          showElements,
+        };
+      })();
+      let LoginUserData;
+      window.addEventListener("DOMContentLoaded", async function () {
+        pageManager.hideElements();
+        await LoginTextSwitch();
+        await GetBookingData();
+
+        LoginRegistActive();
+        SwitchToRegister();
+        SwitchToLogin();
+
+        // pageManager.hideElements();
+        // console.log("LoginUserData:", LoginUserData);
+        // pageManager.showElements();
+
+        //回到首頁
+        document
+          .querySelector(".BacktoIndex")
+          .addEventListener("click", function () {
+            window.location.href = `/`;
+          });
+      });
+
+      //網頁初始化登入者的資料Loading
+      async function GetBookingData() {
+        let token = localStorage.getItem("access_token");
+        // let isLoggedIn = await CheckingLoginStatus();
+        if (!token) {
+          window.location.href = "/";
+          console.error("No token found");
+          return;
+        }
+
+        try {
+          let response = await fetch("/api/booking", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          // let UsenameResponse = await fetch("/api/user/auth", {
+          //   method: "GET",
+          //   headers: {
+          //     Authorization: `Bearer ${token}`,
+          //   },
+          // });
+          // let Usename = await UsenameResponse.json();
+          // Email = Usename["data"]["email"];
+          // Usename = Usename["data"]["username"];
+          console.log("LoginUserDatainGet:", LoginUserData);
+          let data = await response.json();
+          Usename = LoginUserData["username"];
+          Email = LoginUserData["email"];
+          console.log(Usename, Email);
+
+          //如果使用者有登記行程則Fetch Booking API to get booking data and render Page
+          if (data["data"] != null) {
+            // console.log(data["data"]["attraction"]);
+            if (!response.ok) {
+              throw new Error("未能獲取數據");
+            }
+            let AttractionName = data["data"]["attraction"]["name"];
+            let AttractionDate = data["data"]["date"];
+            let AttractionPrice = data["data"]["price"];
+            let AttractionTime;
+            if (data["data"]["time"] === "morning") {
+              AttractionTime = "早上8點到下午2點";
+            } else {
+              AttractionTime = "下午2點到晚上9點";
+            }
+            let AttractionLoc = data["data"]["attraction"]["address"];
+            let AttractionPicURL = data["data"]["attraction"]["image"];
+
+            let usernameforHTML = document.getElementById("username");
+
+            let AttractionPicBkimg = document.getElementById("AttractionPic");
+
+            let attractionNameforHTML =
+              document.getElementById("attractionName");
+            let BookingDate = document.getElementById("BookingDate");
+            let travelTime = document.getElementById("travelTime");
+            let travelFee = document.getElementById("travelFee");
+            let travelLoc = document.getElementById("travelLoc");
+
+            let contactName = document.getElementById("contactName");
+            let contactEmail = document.getElementById("contactEmail");
+
+            let finalFee = document.getElementById("finalFee");
+
+            usernameforHTML.innerText = Usename;
+            attractionNameforHTML.innerText = AttractionName;
+            BookingDate.innerText = AttractionDate;
+            travelTime.innerText = AttractionTime;
+            travelFee.innerText = AttractionPrice;
+            travelLoc.innerText = AttractionLoc;
+            AttractionPicBkimg.style.backgroundImage = `url('${AttractionPicURL}')`;
+            contactName.value = Usename;
+            console.log("contactName.value:", contactName.value);
+            contactEmail.value = Email;
+            finalFee.innerText = AttractionPrice;
+            pageManager.showElements(); // render the booking page based on the response of API
+          } else {
+            //If there is no booking data, render "沒有預定行程" text on the bookingpage.
+            let usernameforHTML = document.getElementById("username");
+            usernameforHTML.innerText = Usename;
+            pageManager.hideElements();
+          }
+        } catch (error) {
+          console.error("Error:", error.message);
+        }
+      }
+
+      //右上角"預定行程"按鈕按下
+      async function myItinerary() {
+        // const token = localStorage.getItem("access_token");
+        let isLoggedIn = await CheckingLoginStatus();
+        if (!isLoggedIn) {
+          let LoginInmodal = document.getElementById("LoginInForm");
+          LoginInmodal.style.display = "block";
+          document.getElementById("LoginMsgText").innerText = "";
+          document.getElementById("LoginMsgText").style.display = "none";
+          document.getElementById("overlay").style.display = "block";
+          return;
+        } else {
+          window.location.href = `/booking`;
+        }
+      }
+
+      //刪除已預定行程
+      async function DeleteBooking() {
+        let token = localStorage.getItem("access_token");
+        try {
+          let response = await fetch("/api/booking", {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          let data = await response.json();
+          console.log(data);
+          window.location.href = window.location.href;
+        } catch (error) {
+          console.error("Error:", error.message);
+        }
+      }
+
+      //初始化右上登入/註冊面板右上角的按下closeBtn效果
+      function LoginRegistActive() {
+        var loginBtn = document.getElementById("login");
+        var LoginInmodal = document.getElementById("LoginInForm");
+        var Registermodal = document.getElementById("registerForm");
+        var overlay = document.getElementById("overlay");
+        var LoginccloseBtn = document.getElementById("LogincloseBtn");
+        var RegistercloseBtn = document.getElementById("RegistercloseBtn");
+
+        loginBtn.addEventListener("click", function () {
+          LoginInmodal.style.display = "block";
+          overlay.style.display = "block";
+          document.getElementById("LoginMsgText").innerText = "";
+          document.getElementById("LoginMsgText").style.display = "none";
+        });
+
+        LoginccloseBtn.addEventListener("click", function () {
+          LoginInmodal.style.display = "none";
+          overlay.style.display = "none";
+          document.getElementById("LoginMsgText").innerText = "";
+          document.getElementById("LoginMsgText").style.display = "none";
+        });
+
+        RegistercloseBtn.addEventListener("click", function () {
+          Registermodal.style.display = "none";
+          overlay.style.display = "none";
+          document.getElementById("MsgText").innerText = "";
+          document.getElementById("MsgText").style.display = "none";
+        });
+
+        overlay.addEventListener("click", function () {
+          LoginInmodal.style.display = "none";
+          Registermodal.style.display = "none";
+          overlay.style.display = "none";
+        });
+      }
+
+      //切換到註冊面板
+      function SwitchToRegister() {
+        let SwitchToRegister = document.getElementById("SwitchToRegister");
+        let LoginInmodal = document.getElementById("LoginInForm");
+        let Registermodal = document.getElementById("registerForm");
+        SwitchToRegister.addEventListener("click", function () {
+          Registermodal.style.display = "block";
+          LoginInmodal.style.display = "none";
+          document.getElementById("MsgText").innerText = "";
+          document.getElementById("MsgText").style.display = "none";
+        });
+      }
+      //切換到登入面板
+      function SwitchToLogin() {
+        let SwitchToLogin = document.getElementById("SwitchToLogin");
+        let LoginInmodal = document.getElementById("LoginInForm");
+        let Registermodal = document.getElementById("registerForm");
+        SwitchToLogin.addEventListener("click", function () {
+          Registermodal.style.display = "none";
+          LoginInmodal.style.display = "block";
+          document.getElementById("LoginMsgText").innerText = "";
+          document.getElementById("LoginMsgText").style.display = "none";
+        });
+      }
+
+      //按下註冊面板下的註冊紐發送註冊資料
+      async function RegisterFetch() {
+        var username = document.getElementById("RegistAccountName").value;
+        var email = document.getElementById("RegistMemberEmail").value;
+        var password = document.getElementById("RegistMemberPassword").value;
+        if (!email || !password || !username) {
+          window.alert("請填寫完整的個人資料");
+          return; // 如果有未填寫的字段，停止執行後續程式碼
+        }
+
+        const userData = {
+          username: username,
+          email: email,
+          password: password,
+        };
+
+        try {
+          // const response = await fetch("/signup", {
+          const response = await fetch("/api/user", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userData),
+          });
+
+          const responseMessage = await response.json();
+          const msgText = document.getElementById("MsgText");
+
+          if (!response.ok) {
+            if (response.status === 400) {
+              msgText.innerText = responseMessage.message;
+              msgText.style.display = "flex";
+              msgText.style.color = "red";
+            } else {
+              msgText.style.display = "none";
+              msgText.innerText = "";
+            }
+          } else {
+            if (response.status === 200) {
+              msgText.innerText = "註冊成功，請登入系統";
+              msgText.style.display = "flex";
+              msgText.style.color = "green";
+            }
+          }
+
+          // const user = await response.json();
+          // console.log("User created:", user);
+        } catch (error) {
+          console.error("Error:", error.message);
+          // 在這裡處理錯誤，顯示錯誤訊息於console
+        }
+      }
+
+      //按下登錄面板下的登錄紐發送登錄資料
+      async function LoginFetch() {
+        try {
+          // 獲取登入用戶的資料
+          var email = document.getElementById("MemberEmail").value;
+          var password = document.getElementById("MemberPassword").value;
+
+          if (!email || !password) {
+            window.alert("請填寫完整的電子郵件和密碼");
+            return; // 如果有未填寫的字段，停止執行後續程式碼
+          }
+
+          // 準備發送數據
+          var formData = new URLSearchParams();
+          formData.append("username", email);
+          formData.append("password", password);
+
+          // 發送post請求
+          // var response = await fetch("/token", {
+          var response = await fetch("/api/user/auth", {
+            // method: "POST",
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formData.toString(),
+          });
+
+          var data = await response.json();
+
+          if (!response.ok) {
+            if (response.status === 400) {
+              document.getElementById("LoginMsgText").style.display = "flex";
+              document.getElementById("LoginMsgText").innerText = data.message;
+
+              document.getElementById("LoginMsgText").style.color = "red";
+              console.log(data.message);
+            }
+          } else {
+            console.log(data);
+            // 將token存儲到localStorage
+            // localStorage.setItem("access_token", data.access_token);
+            localStorage.setItem("access_token", data.token);
+            window.location.href = window.location.href;
+          }
+        } catch (error) {
+          console.error("Error:", error.message);
+        }
+      }
+
+      //登錄狀態檢查
+      async function CheckingLoginStatus() {
+        let token = localStorage.getItem("access_token");
+        // console.log(token);
+        if (!token) {
+          console.error("No token found");
+          return false;
+        }
+        try {
+          // let response = await fetch("/LoginStatus", {
+          let response = await fetch("/api/user/auth", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          let data = await response.json();
+          if (!response.ok) {
+            throw new Error("未能獲取數據");
+          }
+          LoginUserData = data["data"];
+          console.log("data:", data["data"]["username"]);
+          return true;
+        } catch (error) {
+          console.error("Error:", error.message);
+          return false;
+        }
+      }
+
+      //置換右上角登入時候的狀態
+      async function LoginTextSwitch() {
+        let isLoggedIn = await CheckingLoginStatus();
+
+        let Sign_Out = document.getElementById("Sign_Out");
+        let Sign_In_Up = document.getElementById("Sign_In_Up");
+
+        if (isLoggedIn) {
+          // 用戶已登錄，置換右上角登錄文字為"登出系統"
+          Sign_In_Up.style.display = "none";
+          Sign_Out.style.display = "flex";
+        } else {
+          // 用戶未登錄，置換右上角登錄文字為"登入/註冊"
+          Sign_In_Up.style.display = "flex";
+          Sign_Out.style.display = "none";
+        }
+      }
+
+      //刪除jwt登錄toekn
+      function LogOutDeleteToken() {
+        localStorage.removeItem("access_token");
+      }
+
+      //按下右上角登出鈕，置換右上角登錄文字為"登入/註冊"
+      async function LogOutBtnPush() {
+        LogOutDeleteToken();
+        LoginTextSwitch();
+        window.location.href = window.location.href;
+      }
+    </script>
+  </body>
 </html>
