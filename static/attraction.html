@@ -31,7 +31,9 @@
         </div>
         <div class="Frame2">
           <div class="Frame1">
-            <div class="Itinerary">預定行程</div>
+            <div class="Itinerary" id="Itinerary" onclick="myItinerary()">
+              預定行程
+            </div>
             <div class="Sign_In_Up" id="Sign_In_Up">
               <span class="login" id="login">登錄/註冊</span>
             </div>
@@ -76,7 +78,7 @@
           <div class="BookingDate">
             <div class="DateChoose">
               <div class="DateText">選擇日期 :&nbsp;</div>
-              <input type="date" class="datecalendar" />
+              <input type="date" class="datecalendar" required />
             </div>
           </div>
           <div class="selectTime">
@@ -113,7 +115,9 @@
             </div>
           </div>
           <div class="submitButtonBookingForm">
-            <button class="BookingForm-button">開始預約行程</button>
+            <button class="BookingForm-button" onclick="submitBookingForm()">
+              開始預約行程
+            </button>
           </div>
         </div>
       </div>
@@ -272,6 +276,86 @@
       });
 
       //////////////////////////////分隔線//////////////////////////////////////////
+
+      //右上角預定行程按鈕按下
+      async function myItinerary() {
+        // const token = localStorage.getItem("access_token");
+        let isLoggedIn = await CheckingLoginStatus();
+        if (!isLoggedIn) {
+          let LoginInmodal = document.getElementById("LoginInForm");
+          LoginInmodal.style.display = "block";
+          document.getElementById("LoginMsgText").innerText = "";
+          document.getElementById("LoginMsgText").style.display = "none";
+          document.getElementById("overlay").style.display = "block";
+          return;
+        } else {
+          window.location.href = `/booking`;
+        }
+      }
+
+      //按下畫面中央"開始預約行程"按鈕
+      async function submitBookingForm() {
+        const dateInput = document.querySelector(".datecalendar");
+        const timeInputs = document.querySelectorAll('input[name="time"]');
+        const formIsValid =
+          dateInput.checkValidity() &&
+          Array.from(timeInputs).some((input) => input.checkValidity());
+
+        if (!formIsValid) {
+          dateInput.reportValidity();
+          Array.from(timeInputs).forEach((input) => input.reportValidity());
+          return;
+        }
+
+        const date = document.querySelector(".datecalendar").value;
+        const time = document.querySelector('input[name="time"]:checked').value;
+        const price = parseFloat(
+          document.querySelector(".tour_fee_amount").textContent
+        ); // 确保 price 是 float 类型
+
+        const requestBody = {
+          attractionId: attractionId,
+          date: date,
+          time: time,
+          price: price,
+        };
+        const token = localStorage.getItem("access_token");
+        let isLoggedIn = await CheckingLoginStatus();
+        if (!isLoggedIn) {
+          let LoginInmodal = document.getElementById("LoginInForm");
+          LoginInmodal.style.display = "block";
+          document.getElementById("LoginMsgText").innerText = "";
+          document.getElementById("LoginMsgText").style.display = "none";
+          document.getElementById("overlay").style.display = "block";
+          return;
+        }
+        console.log(token);
+        console.log(requestBody);
+        try {
+          const response = await fetch("/api/booking", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(requestBody),
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            // alert("預約成功: " + JSON.stringify(result));
+            console.log("預約成功: " + JSON.stringify(result));
+            window.location.href = `/booking`;
+          } else {
+            const error = await response.json();
+            // alert("預約失敗: " + JSON.stringify(error));
+            console.log("預約失敗: " + JSON.stringify(error));
+          }
+        } catch (error) {
+          // alert("請求失敗: " + error.message);
+          console.log("請求失敗: " + error.message);
+        }
+      }
 
       //右上登入註冊按鈕按下RegistercloseBtn
       function LoginRegistActive() {
@@ -502,6 +586,7 @@
       const urlSegments = window.location.pathname.split("/");
       const attractionId = urlSegments[urlSegments.length - 1];
 
+      //渲染attraction頁面
       async function fetchAttraction() {
         try {
           const response = await fetch(`/api/attraction/${attractionId}`);
