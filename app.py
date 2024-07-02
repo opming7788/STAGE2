@@ -16,7 +16,8 @@ dbconfig = {
     "host": "localhost",
     "user": "root",
     # "password":"xxxxxxxxxxxxxxxxx",
-    
+    "password":"abc31415",
+    # "password":"Abc123!@",
     "database": "taipeiattractions"
 }
 
@@ -245,7 +246,7 @@ def get_current_user(request: Request):
     return UserResponse(data=UserInDB(**user))
 
 
-# ////////////////////////////////////////////////Booking API////////////////////////////////////////////////////
+# ////////////////////////////////////////////////以下Booking API////////////////////////////////////////////////////
 
 from datetime import date
 from decimal import Decimal
@@ -404,12 +405,237 @@ async def delete_booking(request: Request):
     return JSONResponse(status_code=200, content={"ok": True})
     
 
+# ////////////////////////////////////////////////以上Booking API////////////////////////////////////////////////////
+
+
+# ////////////////////////////////////////////////以下Orders API///////////////////////////////////////////////////////
+
+from fastapi import FastAPI, HTTPException, Request
+
+from datetime import datetime
+import uuid
+import httpx
+
+class Attraction(BaseModel):
+    id: int
+    name: str
+    address: str
+    image: str
+
+class Trip(BaseModel):
+    attraction: Attraction
+    date: str
+    time: str
+
+class Contact(BaseModel):
+    name: str
+    email: str
+    phone: str
+
+class Order(BaseModel):
+    price: int
+    trip: Trip
+    contact: Contact
+
+class PaymentPayload(BaseModel):
+    prime: str
+    order: Order
+
+config = {
+    "partner_key": "partner_2FiascR6YFWLsOQNKVQXl6i7uPq4xUnhgV8i7hDshUB5EI0PVMlWDXGK",
+    "merchant_id": "opming_CTBC_Union_Pay"
+}
+
+@app.post("/api/orders")
+async def create_order(request: Request,payment_payload: PaymentPayload):
+    con = connection_pool.get_connection()
+    auth_header = request.headers.get("Authorization")
+    if auth_header is None or not auth_header.startswith("Bearer "):
+        return JSONResponse(status_code=403, content={"error": True,"message": "未登入系統，拒絕存取"})
+
+    token = auth_header.split(" ")[1]
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        with con.cursor() as cursor:
+            cursor.execute("SELECT memberData.id FROM memberData where memberData.email=%s",(payload["sub"],))
+            memberId=cursor.fetchone()
+            if memberId is None:
+                return JSONResponse(status_code=403, content={"error": True,"message": "未登入系統，拒絕存取"})
+            memberId=memberId[0]
+
+        payload = await request.json()
+    
+    except Exception as e:
+        return JSONResponse(status_code=400, content={"error": True,"message": "訂單建立失敗，輸入不正確或其他原因"})
+    
+    # print("request:",await request.json())
+    prime = payload.get("prime")
+    order = payload.get("order")
+
+    if not prime or not order:
+        return JSONResponse(status_code=400, content= \
+        {"error": True,"message": "訂單建立失敗，沒有prime值或order"})
+    
+    price = order.get("price")
+    contact = order.get("contact")
+
+    if not price or not contact:
+        return JSONResponse(status_code=400, content=\
+        {"error": True,"message": "訂單建立失敗，訂單缺少價格或聯絡資訊"})
+    
+    member_id=memberId
+    orderNumber = datetime.now().strftime("%Y%m%d%H%M%S") + str(uuid.uuid4().hex)[:6]
+    
+    attraction_id=order["trip"]["attraction"]["id"]
+    attraction_name=order["trip"]["attraction"]["name"]
+    attraction_Loc=order["trip"]["attraction"]["address"]
+    attraction_image=order["trip"]["attraction"]["image"]
+    trip_date=order["trip"]["date"]
+    trip_time=order["trip"]["time"]
+    contact_name=order["contact"]["name"]
+    contact_email=order["contact"]["email"]
+    contact_phone=order["contact"]["phone"]
+    
+    try:
+        add_order_SQLcmd = (
+            "INSERT INTO orderData (status, member_id, orderNumber, price, attraction_id, attraction_name, "
+            "attraction_Loc, attraction_image, trip_date, trip_time, contact_name, contact_email, contact_phone) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        )      
+        order_data_tuple = (
+            'UNPAID',  # status
+            memberId,  # member_id
+            orderNumber,  # orderNumber
+            price,  # price
+            attraction_id,  # attraction_id
+            attraction_name,  # attraction_name
+            attraction_Loc,  # attraction_Loc
+            attraction_image,  # attraction_image
+            trip_date,  # trip_date
+            trip_time,  # trip_time
+            contact_name,  # contact_name
+            contact_email,  # contact_email
+            contact_phone  # contact_phone
+        )
+
+        with con.cursor() as cursor:
+            cursor.execute(add_order_SQLcmd, order_data_tuple)
+            con.commit()
+            order_id = cursor.lastrowid
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": True,"message": "伺服器內部錯誤"})
+    finally:
+        con.close()
+    
+    # print("partner_key:",config["partner_key"])
+    # print("merchant_id:",config["merchant_id"])
+
+    url = "https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
+    headers = {
+        "x-api-key": config["partner_key"],
+        "Content-Type": "application/json"
+    }
+
+    payload_dict = {
+        
+        "prime": prime,
+        "partner_key": "partner_2FiascR6YFWLsOQNKVQXl6i7uPq4xUnhgV8i7hDshUB5EI0PVMlWDXGK",
+        "merchant_id": "opming_ESUN",
+        "details": "TapPay Test",
+        "amount": price,
+        "order_number":orderNumber,
+        
+        "cardholder": {
+            "phone_number": contact.get("phone"),
+            "name": contact.get("name"),
+            "email": contact.get("email"),
+            # "zip_code":"",
+        }
+    }
+
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(url, json=payload_dict, headers=headers)
+            result = response.json()
+            payment_status = result.get("status", -1)
+            payment_message = "付款成功" if payment_status == 0 else "付款失敗"
+            # print(result)
+            
+        except httpx.HTTPStatusError as e:
+            print(f"HTTP 錯誤: {e.response.status_code} {e.response.text}")
+            return JSONResponse(status_code=400, content={"error": True, "message": "付款失敗，請稍後再試"})
+        except httpx.RequestError as e:
+            print(f"請求錯誤: {e}")
+            return JSONResponse(status_code=400, content={"error": True, "message": "請求錯誤"})
+        except Exception as e:
+            print(f"其他錯誤: {str(e)}")
+            return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+        
+    con = connection_pool.get_connection()
+
+    try:
+        with con.cursor() as cursor:
+            add_payment = (
+                "INSERT INTO orderPayments (order_id, status, message, transaction_id, bank_transaction_id, amount, currency, auth_code, card_info_issuer, card_info_funding, card_info_type, card_info_level, card_info_country, card_info_last_four, card_info_bin_code, card_info_issuer_zh_tw, card_info_bank_id, card_info_country_code, transaction_time_millis, bank_start_time_millis, bank_end_time_millis, bank_result_code, bank_result_msg, card_identifier, merchant_id, is_rba_verified, transaction_method_reference, transaction_method) "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            )
+            print("amount:",result.get("amount"))
+            cursor.execute(add_payment, (
+                order_id, 
+                'SUCCESS' if payment_status == 0 else 'FAILURE', 
+                payment_message, 
+                result.get("rec_trade_id"), 
+                result.get("bank_transaction_id"), 
+                result.get("amount"), 
+                result.get("currency"), 
+                result.get("auth_code"), 
+                result["card_info"].get("issuer") if result.get("card_info") else None, 
+                result["card_info"].get("funding") if result.get("card_info") else None, 
+                result["card_info"].get("type") if result.get("card_info") else None, 
+                result["card_info"].get("level") if result.get("card_info") else None, 
+                result["card_info"].get("country") if result.get("card_info") else None, 
+                result["card_info"].get("last_four") if result.get("card_info") else None, 
+                result["card_info"].get("bin_code") if result.get("card_info") else None, 
+                result["card_info"].get("issuer_zh_tw") if result.get("card_info") else None, 
+                result["card_info"].get("bank_id") if result.get("card_info") else None, 
+                result["card_info"].get("country_code") if result.get("card_info") else None, 
+                result.get("transaction_time_millis"), 
+                result["bank_transaction_time"].get("start_time_millis") if result.get("bank_transaction_time") else None, 
+                result["bank_transaction_time"].get("end_time_millis") if result.get("bank_transaction_time") else None, 
+                result.get("bank_result_code"), 
+                result.get("bank_result_msg"), 
+                result.get("card_identifier"), 
+                result.get("merchant_id"), 
+                result.get("is_rba_verified"), 
+                result["transaction_method_details"].get("transaction_method_reference") if result.get("transaction_method_details") else None, 
+                result["transaction_method_details"].get("transaction_method") if result.get("transaction_method_details") else None
+            ))
+
+            update_order_status = "UPDATE orderData SET status=%s WHERE orderNumber=%s"
+            cursor.execute(update_order_status, ('PAID' if payment_status == 0 else 'UNPAID', orderNumber))
+            con.commit()
+    except Exception as e:
+        print(f"Database error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Database error")
+    finally:
+        con.close()
+    
+    return JSONResponse(status_code=200, content={"data": {"number": orderNumber,
+        "payment": {
+            "status": payment_status,
+            "message": payment_message
+        }}})
 
 
 
-# ////////////////////////////////////////////////Booking API////////////////////////////////////////////////////
 
 
+
+@app.post("/api/order/{orderNumber}")
+async def get_Order(request: Request):
+    pass
+
+# ////////////////////////////////////////////////以上Orders API///////////////////////////////////////////////////////
 
 class Attraction(BaseModel):
     id: Optional[int]
@@ -572,3 +798,4 @@ async def get_mrts():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
+
