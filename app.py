@@ -16,8 +16,7 @@ dbconfig = {
     "host": "localhost",
     "user": "root",
     # "password":"xxxxxxxxxxxxxxxxx",
-    "password":"abc31415",
-    # "password":"Abc123!@",
+
     "database": "taipeiattractions"
 }
 
