@@ -17,6 +17,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
+
     <link rel="stylesheet" href="/static/style3.css" />
   </head>
   <body>
@@ -57,7 +58,7 @@
         <div class="bookingInfo">
           <div class="AttractionPic" id="AttractionPic"></div>
           <div class="AttractionInfo">
-            <div class="AttrInfoTitle">
+            <div class="AttrInfoTitle" id="AttrInfoTitle">
               台北一日遊 :&nbsp;<span id="attractionName">平安鐘</span>
             </div>
             <div class="AttrInfoDate">
@@ -117,7 +118,12 @@
       </div>
       <div class="ContactInfoPhoneNum">
         手機號碼 :&nbsp;
-        <input type="text" placeholder="輸入手機號碼" class="inputInfo" />
+        <input
+          type="text"
+          placeholder="輸入手機號碼"
+          class="inputInfo"
+          id="ContactPhoneNum"
+        />
       </div>
       <div class="ContactInfoNotice">
         請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
@@ -128,19 +134,15 @@
       <div class="CreditCardTitle">信用卡付款資訊</div>
       <div class="CreditCardNum">
         卡片號碼 :&nbsp;
-        <input
-          type="password"
-          placeholder="**** **** **** ****"
-          class="inputInfo"
-        />
+        <div id="card-number" class="inputInfo"></div>
       </div>
       <div class="CreditCardExpiredTime">
         過期時間 :&nbsp;
-        <input type="month" class="inputInfo" />
+        <div id="card-expiration-date" class="inputInfo"></div>
       </div>
       <div class="CreditCardCVC">
         驗證密碼 :&nbsp;
-        <input type="password" placeholder="CVV" class="inputInfo" />
+        <div id="card-ccv" class="inputInfo"></div>
       </div>
     </div>
     <div class="divider2" id="dividerL3"></div>
@@ -149,7 +151,7 @@
         總價 : 新台幣&nbsp;<span id="finalFee">2000</span>&nbsp;元
       </div>
       <div class="ConfirmButton">
-        <button class="BookingButton">確認訂購並付款</button>
+        <button class="BookingButton" disabled>確認訂購並付款</button>
       </div>
     </div>
 
@@ -226,6 +228,7 @@
       </div>
     </div>
 
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.18.0"></script>
     <script>
       //整理網頁，更新網頁元素
       const pageManager = (function () {
@@ -271,6 +274,20 @@
         };
       })();
       let LoginUserData;
+
+      //for mac使用者
+      function forceBlurIos() {
+        if (!isIos()) return;
+        const input = document.createElement("input");
+        input.setAttribute("type", "text");
+        document.activeElement.prepend(input);
+        input.focus();
+        input.remove();
+      }
+
+      function isIos() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      }
       window.addEventListener("DOMContentLoaded", async function () {
         pageManager.hideElements();
         await LoginTextSwitch();
@@ -280,9 +297,191 @@
         SwitchToRegister();
         SwitchToLogin();
 
-        // pageManager.hideElements();
-        // console.log("LoginUserData:", LoginUserData);
-        // pageManager.showElements();
+        /////////////////////TapPay設定
+        TPDirect.setupSDK(
+          151418,
+          "app_IStNkh3WTBbaJDH1f5teLM0gSLMOl0ZE79nMdK2i7dI5gTSrFdIki7Hq76nY",
+          "sandbox"
+        );
+        TPDirect.card.setup({
+          fields: {
+            number: {
+              element: "#card-number",
+              placeholder: "**** **** **** ****",
+            },
+            expirationDate: {
+              element: "#card-expiration-date",
+              placeholder: "MM / YY",
+            },
+            ccv: {
+              element: "#card-ccv",
+              placeholder: "CVV",
+            },
+          },
+          styles: {
+            input: { color: "gray" },
+            ":focus": { color: "black" },
+            ".valid": { color: "green" },
+            ".invalid": { color: "red" },
+            "@media screen and (max-width: 400px)": {
+              input: { color: "orange" },
+            },
+          },
+          isMaskCreditCardNumber: true,
+          maskCreditCardNumberRange: { beginIndex: 6, endIndex: 11 },
+        });
+
+        TPDirect.card.onUpdate(function (update) {
+          // console.log(update);
+          const submitButton = document.querySelector(".BookingButton");
+          if (update.canGetPrime) {
+            submitButton.removeAttribute("disabled");
+          } else {
+            submitButton.setAttribute("disabled", true);
+          }
+        });
+
+        document
+          .querySelector(".BookingButton")
+          .addEventListener("click", async function () {
+            let isLoggedIn = await CheckingLoginStatus();
+            if (!isLoggedIn) {
+              console.error("User not logged in or token invalid");
+              return;
+            }
+
+            const contactNameInput = document.getElementById("contactName");
+            const contactEmailInput = document.getElementById("contactEmail");
+            const contactPhoneNumInput =
+              document.getElementById("ContactPhoneNum");
+
+            const inputsValid =
+              contactNameInput.value.trim() !== "" &&
+              contactEmailInput.value.trim() !== "" &&
+              contactPhoneNumInput.value.trim() !== "";
+
+            if (!inputsValid) {
+              alert("請填寫所有聯絡資訊欄位");
+              return;
+            }
+
+            forceBlurIos();
+            const tappayStatus = TPDirect.card.getTappayFieldsStatus();
+
+            if (!tappayStatus.canGetPrime) {
+              alert("can not get prime");
+              return;
+            }
+
+            TPDirect.card.getPrime(async function (result) {
+              if (result.status !== 0) {
+                alert("get prime error " + result.msg);
+                return;
+              }
+              console.log(result.card.prime);
+
+              let token = localStorage.getItem("access_token");
+
+              if (!token) {
+                console.error("No token found");
+                return;
+              }
+
+              let travelFee = document
+                .getElementById("travelFee")
+                .getAttribute("data-attraction");
+
+              let AttractionID = document
+                .getElementById("AttrInfoTitle")
+                .getAttribute("data-attraction");
+
+              let AttractionName = document
+                .getElementById("attractionName")
+                .getAttribute("data-attraction");
+              let AttractionAddress = document
+                .getElementById("travelLoc")
+                .getAttribute("data-attraction");
+
+              let AttractionImg = document
+                .getElementById("AttractionPic")
+                .getAttribute("data-attraction");
+
+              let BookingDate = document
+                .getElementById("BookingDate")
+                .getAttribute("data-attraction");
+
+              let travelTime = document
+                .getElementById("travelTime")
+                .getAttribute("data-attraction");
+
+              let contactName = document.getElementById("contactName").value;
+
+              let contactEmail = document.getElementById("contactEmail").value;
+              let ContactPhoneNum =
+                document.getElementById("ContactPhoneNum").value;
+
+              let orderData = {
+                prime: result.card.prime,
+                order: {
+                  price: 2000,
+                  trip: {
+                    attraction: {
+                      id: AttractionID,
+                      name: AttractionName,
+                      address: AttractionAddress,
+                      image: AttractionImg,
+                    },
+                    date: BookingDate,
+                    time: travelTime,
+                  },
+                  contact: {
+                    name: contactName,
+                    email: contactEmail,
+                    phone: ContactPhoneNum,
+                  },
+                },
+              };
+              console.log("orderData:", orderData);
+
+              try {
+                let attractionData = await fetch("/api/orders", {
+                  method: "POST",
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(orderData),
+                });
+
+                if (attractionData.ok) {
+                  let data = await attractionData.json();
+                  console.log("Booking data:", data["data"]["number"]);
+
+                  //購買成功刪除booking資料
+                  try {
+                    let response = await fetch("/api/booking", {
+                      method: "DELETE",
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    });
+                    let data = await response.json();
+                    console.log(data);
+                  } catch (error) {
+                    console.error("Error:", error.message);
+                  }
+
+                  window.location.href = `/thankyou?number=${data["data"]["number"]}`;
+                } else {
+                  console.error("HTTP error", attractionData.status);
+                }
+              } catch (error) {
+                console.error("Fetch error", error);
+              }
+            });
+          });
+
+        ///////////////////////////////////////////////////////////////////
 
         //回到首頁
         document
@@ -310,15 +509,6 @@
             },
           });
 
-          // let UsenameResponse = await fetch("/api/user/auth", {
-          //   method: "GET",
-          //   headers: {
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // });
-          // let Usename = await UsenameResponse.json();
-          // Email = Usename["data"]["email"];
-          // Usename = Usename["data"]["username"];
           console.log("LoginUserDatainGet:", LoginUserData);
           let data = await response.json();
           Usename = LoginUserData["username"];
@@ -332,6 +522,9 @@
               throw new Error("未能獲取數據");
             }
             let AttractionName = data["data"]["attraction"]["name"];
+
+            let AttractionID = data["data"]["attraction"]["id"];
+
             let AttractionDate = data["data"]["date"];
             let AttractionPrice = data["data"]["price"];
             let AttractionTime;
@@ -343,12 +536,15 @@
             let AttractionLoc = data["data"]["attraction"]["address"];
             let AttractionPicURL = data["data"]["attraction"]["image"];
 
+            let AttractionIDdiv = document.getElementById("AttrInfoTitle");
+
             let usernameforHTML = document.getElementById("username");
 
             let AttractionPicBkimg = document.getElementById("AttractionPic");
 
             let attractionNameforHTML =
               document.getElementById("attractionName");
+
             let BookingDate = document.getElementById("BookingDate");
             let travelTime = document.getElementById("travelTime");
             let travelFee = document.getElementById("travelFee");
@@ -359,15 +555,29 @@
 
             let finalFee = document.getElementById("finalFee");
 
+            AttractionIDdiv.setAttribute("data-attraction", AttractionID);
+
             usernameforHTML.innerText = Usename;
+            usernameforHTML.setAttribute("data-attraction", Usename);
             attractionNameforHTML.innerText = AttractionName;
+            attractionNameforHTML.setAttribute(
+              "data-attraction",
+              AttractionName
+            );
             BookingDate.innerText = AttractionDate;
+            BookingDate.setAttribute("data-attraction", AttractionDate);
             travelTime.innerText = AttractionTime;
+            travelTime.setAttribute("data-attraction", data["data"]["time"]);
             travelFee.innerText = AttractionPrice;
+            travelFee.setAttribute("data-attraction", AttractionPrice);
             travelLoc.innerText = AttractionLoc;
+            travelLoc.setAttribute("data-attraction", AttractionLoc);
             AttractionPicBkimg.style.backgroundImage = `url('${AttractionPicURL}')`;
+            AttractionPicBkimg.setAttribute(
+              "data-attraction",
+              AttractionPicURL
+            );
             contactName.value = Usename;
-            console.log("contactName.value:", contactName.value);
             contactEmail.value = Email;
             finalFee.innerText = AttractionPrice;
             pageManager.showElements(); // render the booking page based on the response of API

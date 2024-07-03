@@ -133,30 +133,26 @@ body {
   width: 100%;
 }
 
-.divider2 {
-  border-bottom: 1px solid rgba(232, 232, 232, 1);
-  /* margin: 20px 0; */
-  /* margin-bottom: 40px; */
-  width: 100%;
-  max-width: 1200px;
-  padding: 0px 10px 0px 10px;
-  box-sizing: border-box;
-}
-
-.InfoHeader {
-  width: 100%;
+.bookingItinerary {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  text-align: left;
-
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 19px;
-  font-weight: 700;
-  line-height: 16px;
-  text-align: left;
-  color: rgba(102, 102, 102, 1);
+  max-width: 1000px;
+  width: 100%;
+  margin: 40px 0px 40px 0px;
+  gap: 15px;
+  /* padding: 0px 15px 0px 15px; */
+  box-sizing: border-box;
+  height: 25vh;
 }
 
+.noItinerarycontainer {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+  height: 100%;
+}
 .noItinerary {
   font-family: "Noto Sans TC", sans-serif;
   font-size: 16px;
@@ -164,326 +160,14 @@ body {
   line-height: 13.3px;
   text-align: left;
   color: rgba(102, 102, 102, 1);
-  display: none;
-}
-
-@media (max-width: 1000px) {
-  .InfoHeader {
-    padding-left: 10px;
-    padding-right: 10px;
-    box-sizing: border-box;
-  }
-}
-
-.bookingItinerary {
   display: flex;
-  flex-direction: column;
-  max-width: 1000px;
-  width: 100%;
-  margin: 40px 0px 40px 0px;
-  gap: 30px;
-  /* padding: 0px 15px 0px 15px; */
-  box-sizing: border-box;
-}
-
-.attractionSetion {
-  /* height: 200px; */
-  display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  padding: 0px 10px 0px 10px;
-  /* background-color: blue; */
-}
-
-.bookingInfo {
-  width: 100%;
-  display: flex;
-  /* flex-direction: row; */
-  /* align-items: center; */
-  /* justify-content: space-between; */
-  /* justify-content: center; */
-  gap: 30px;
-}
-
-.AttractionPic {
-  background-image: url("test.png");
-  flex: 0 0 250px;
-  max-width: 250px;
-  height: 200px;
-  background-size: cover;
-  background-position: center;
-}
-
-.AttractionInfo {
-  display: flex;
-  /* flex-grow: 1; */
-  flex-direction: column;
-  flex: 0 1 700px;
-  max-width: 700px;
-  /* width: 100%; */
-  /* gap: 20px; */
-  position: relative;
-  /* background-color: aqua; */
-}
-
-@media (max-width: 650px) {
-  .bookingInfo {
-    width: 100%;
-    justify-content: flex-start;
-    flex-direction: column;
-    align-items: center;
-  }
-  .AttractionPic {
-    width: 100%;
-    flex: 0 1 200px;
-    max-width: 100%;
-  }
-  .AttractionInfo {
-    width: 100%;
-    flex: 0 1 200px;
-  }
-}
-
-.deleteBooking {
-  position: absolute;
-  right: 0px;
-  /* bottom: 0px; */
-}
-.deleteBooking img {
-  height: 30px;
-  width: 30px;
-  cursor: pointer;
-}
-
-@media (max-width: 650px) {
-  .deleteBooking {
-    bottom: 0px;
-  }
-  .bookingItinerary {
-    margin-bottom: 30px;
-  }
-}
-
-.AttrInfoTitle {
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 13.3px;
-  text-align: left;
-  color: rgba(68, 136, 153, 1);
-}
-
-.AttrInfoDate,
-.AttrInfoTime,
-.AttrInfoFee,
-.AttrInfoLoc {
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 13.3px;
-  text-align: left;
-  color: rgba(102, 102, 102, 1);
-}
-
-.AttrInfoTitle {
-  margin-bottom: 20px;
-}
-.AttrInfoDate,
-.AttrInfoTime,
-.AttrInfoFee,
-.AttrInfoLoc {
   margin-bottom: 10px;
-}
-.BookingDate,
-.travelTime,
-.travelFee,
-.travelLoc {
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 13.3px;
-  text-align: left;
-  color: rgba(102, 102, 102, 1);
-}
-
-.ContactInfo {
-  /* height: 1000px; */
-  max-width: 1000px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  /* background-color: yellow; */
-  padding: 40px 10px 40px 10px;
-  box-sizing: border-box;
-  color: rgba(102, 102, 102, 1);
-}
-.ContactInfoTitle {
-  display: flex;
-  align-items: center;
-  height: 24px;
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 19px;
-  font-weight: 700;
-  line-height: 16px;
-  text-align: left;
-  margin-bottom: 20px;
-}
-.ContactInfoName,
-.ContactInfoEMail,
-.ContactInfoPhoneNum {
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 13.3px;
-  text-align: left;
-  margin-bottom: 15px;
-}
-
-.ContactInfoNotice {
-  height: 24px;
-  display: flex;
-  align-items: center;
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 13.3px;
-  text-align: left;
-}
-
-@media (max-width: 650px) {
-  .ContactInfoNotice {
-    height: auto;
-    font-family: "Noto Sans TC", sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 23.17px;
-    text-align: left;
-  }
-}
-.inputInfo {
-  width: 200px;
-  height: 38px;
-  padding: 10px;
-  box-sizing: border-box;
-  border: 1px solid rgba(232, 232, 232, 1);
-  border-radius: 5px;
-  color: rgba(0, 0, 0, 1);
-}
-
-.CreditCardInfo {
-  display: flex;
-  flex-direction: column;
-  color: rgba(102, 102, 102, 1);
-  width: 100%;
-  padding: 40px 10px 40px 10px;
-  box-sizing: border-box;
-  max-width: 1000px;
-  width: 100%;
-}
-
-.CreditCardTitle {
-  display: flex;
-  align-items: center;
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 19px;
-  font-weight: 700;
-  line-height: 16px;
-  text-align: left;
-  margin-bottom: 20px;
-}
-
-.CreditCardNum,
-.CreditCardExpiredTime,
-.CreditCardCVC {
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 13.3px;
-  text-align: left;
-}
-
-.bookinConfirm {
-  width: 100%;
-  max-width: 1000px;
-  margin: 40px 0px 40px 0px;
-  padding: 0px 10px 0px 10px;
-  box-sizing: border-box;
-
-  height: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 13.3px;
-  text-align: right;
-
-  color: rgba(102, 102, 102, 1);
-
-  position: relative;
-}
-
-.ConfirmButton {
-  width: 173px;
-  height: 36px;
-
-  font-family: "Noto Sans TC", sans-serif; /* 字體 */
-  font-size: 19px; /* 字體大小 */
-  font-weight: 400; /* 字體粗細 */
-  line-height: 16px; /* 行高 */
-  text-align: center; /* 文字對齊 */
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(68, 136, 153, 1);
-  border-radius: 5px;
-
-  position: absolute;
-  right: 10px;
-  top: 40px;
-}
-
-.BookingButton {
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  background-color: rgba(68, 136, 153, 1);
-  color: white;
-}
-
-.BookingButton:hover {
-  cursor: pointer;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.BookingButton:active {
-  transform: translateY(2px);
-}
-
-.BookingButton:disabled {
-  opacity: 0.6; /* 降低透明度表示禁用 */
-  cursor: not-allowed; /* 修改游標顯示為不可操作 */
-  transform: none;
-  box-shadow: none;
 }
 
 .footerextend {
-  flex: 1;
+  flex: 0;
 }
 .footer {
   width: 100%;
@@ -495,6 +179,8 @@ body {
   padding-top: 40px;
   padding-bottom: 40px;
   box-sizing: border-box;
+  flex: 1;
+  align-items: flex-start;
 }
 .footerText {
   display: flex;
