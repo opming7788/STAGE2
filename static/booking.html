@@ -456,6 +456,21 @@
                 if (attractionData.ok) {
                   let data = await attractionData.json();
                   console.log("Booking data:", data["data"]["number"]);
+
+                  //購買成功刪除booking資料
+                  try {
+                    let response = await fetch("/api/booking", {
+                      method: "DELETE",
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    });
+                    let data = await response.json();
+                    console.log(data);
+                  } catch (error) {
+                    console.error("Error:", error.message);
+                  }
+
                   window.location.href = `/thankyou?number=${data["data"]["number"]}`;
                 } else {
                   console.error("HTTP error", attractionData.status);
